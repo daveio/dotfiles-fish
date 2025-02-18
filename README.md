@@ -10,6 +10,6 @@ Create `secrets.fish` containing any secrets you want to keep private. It's just
 
 Example:
 
-```
+```fish
 set -gx API_KEY "your_api_key"
 ```
