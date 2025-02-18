@@ -14,9 +14,6 @@
   # shadowenv
   shadowenv init fish | source
 
-  # asdf-vm
-  source ~/.asdf/asdf.fish
-
   # direnv
   direnv hook fish | source
 
