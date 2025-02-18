@@ -36,7 +36,7 @@ Sixel graphics are only supported in certain terminals. `iTerm2` fully supports 
 
 If your terminal does not support them, the script will spew out printable characters on startup.
 
-I plan to add support for detecting compatible terminals, or at least detecting `iTerm2` if I can. Again, this would be a great place to contribute.
+It alledgedly contains support for detecting `iTerm2` and bailing out otherwise, but this hasn't always worked in my experience. I plan to add proper support for detecting compatible terminals, or at least detecting `iTerm2` reliably, if I can. Again, this would be a great place to contribute.
 
 ## Missing files
 
