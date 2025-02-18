@@ -30,13 +30,13 @@ It's set up for the latest version of `asdf` which has moved from a chunk of she
 
 ## `sixkcd`
 
-This repo includes a script which I've adapted from [**csdvrx/sixel-testsuite**](https://github.com/csdvrx/sixel-testsuite) to use Sixel graphics to show the current `xkcd` and its alt text as the MOTD. This script is written in `bash` and I haven't ported it over to `fish` yet. If you want to contribute, that would be a great place to start.
+This repo includes `sixkcd`, a script (originally `bash`) which I've and adapted and ported to `fish` from [**csdvrx/sixel-testsuite**](https://github.com/csdvrx/sixel-testsuite). It uses Sixel graphics to show the current `xkcd` and its alt text as the MOTD. Read the comments if you have any trouble with it - there are a couple of configuration options.
 
 Sixel graphics are only supported in certain terminals. `iTerm2` fully supports them, and that's what I use. You can check support for your terminal at [**Are We Sixel Yet?**](https://www.arewesixelyet.com).
 
-If your terminal does not support them, the script will spew out printable characters on startup.
+I'm unsure if the terminal detection method requires the `iTerm2` shell integration. If you're using `iTerm2` you should be using it anyway, so set it up or turn off the shell detection in the configuration section of the script if it's telling you that you're not using `iTerm2` when you are.
 
-It alledgedly contains support for detecting `iTerm2` and bailing out otherwise, but this hasn't always worked in my experience. I plan to add proper support for detecting compatible terminals, or at least detecting `iTerm2` reliably, if I can. Again, this would be a great place to contribute.
+If your terminal does not support Sixel graphics, and the terminal detection fails for any reason or is turned off, the script will spew out printable characters on startup.
 
 ## Missing files
 
