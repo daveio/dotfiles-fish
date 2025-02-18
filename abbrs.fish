@@ -104,6 +104,7 @@ abbr -a m minikube
 abbr -a mp mprocs
 abbr -a n nerdctl
 abbr -a o doctl
+abbr -a oco "oco --fgm"
 abbr -a p poetry
 abbr -a pf "open -a Path\ Finder"
 abbr -a ping "gping"
