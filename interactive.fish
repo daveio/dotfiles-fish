@@ -40,5 +40,5 @@ source /Users/dave/.asdf/installs/gcloud/510.0.0/path.fish.inc
 complete -c gcloud -f -a '(__fish_argcomplete_complete gcloud)'
 complete -c gsutil -f -a '(__fish_argcomplete_complete gsutil)'
 
-# sixkcd
-~/.local/bin/sixkcd
+# sixkcd as motd
+$HOME/.config/fish/tools/sixkcd
