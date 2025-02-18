@@ -50,6 +50,7 @@ function globals.nodejs
       bun \
       degit \
       genaiscript \
+      opencommit \
       pnpm \
       wrangler
   end
