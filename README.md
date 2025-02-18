@@ -26,6 +26,16 @@ More detail is available at [**asdf-vm/asdf**](https://github.com/asdf-vm/asdf).
 
 It's set up for the latest version of `asdf` which has moved from a chunk of shellscript to a proper binary.
 
+## `sixkcd`
+
+This repo includes a script which I've adapted from [**csdvrx/sixel-testsuite**](https://github.com/csdvrx/sixel-testsuite) to use Sixel graphics to show the current `xkcd` and its alt text as the MOTD. This script is written in `bash` and I haven't ported it over to `fish` yet. If you want to contribute, that would be a great place to start.
+
+Sixel graphics are only supported in certain terminals. `iTerm2` fully supports them, and that's what I use. You can check support for your terminal at [**Are We Sixel Yet?**](https://www.arewesixelyet.com).
+
+If your terminal does not support them, the script will spew out printable characters on startup.
+
+I plan to add support for detecting compatible terminals, or at least detecting `iTerm2` if I can. Again, this would be a great place to contribute.
+
 ## Missing files
 
 ### `secrets.fish`
