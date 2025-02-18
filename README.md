@@ -20,7 +20,9 @@ I use the `rose-pine` theme because it is nifty as hell. More detail at [**rose-
 
 ### `asdf`
 
-I use `asdf` to manage versions of development tools. One of the plugins integrates it. More detail is available at [**asdf-vm/asdf**](https://github.com/asdf-vm/asdf).
+I use `asdf` to manage versions of development tools. One of the plugins integrates it.
+
+More detail is available at [**asdf-vm/asdf**](https://github.com/asdf-vm/asdf).
 
 It's set up for the latest version of `asdf` which has moved from a chunk of shellscript to a proper binary.
 
