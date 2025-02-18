@@ -1,0 +1,15 @@
+completions/asdf.fish
+completions/fisher.fish
+completions/flutter.fish
+completions/merge.fish
+completions/move.fish
+completions/replay.fish
+completions/spark.fish
+completions/tag.fish
+completions/tide.fish
+conf.d/**
+fish_variables
+fishd.tmp.*
+functions/**
+# secrets.fish
+themes/**
