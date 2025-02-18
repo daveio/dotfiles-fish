@@ -11,5 +11,5 @@ conf.d/**
 fish_variables
 fishd.tmp.*
 functions/**
-# secrets.fish
+secrets.fish
 themes/**
