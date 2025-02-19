@@ -41,19 +41,15 @@ function cmae
 end
 
 function globals.nodejs
-  set -lx NODE_VERSIONS 22.14.0 23.8.0
-  for i in $NODE_VERSIONS
-    asdf shell nodejs $i
-    npm install -g npm@latest
-    npm install -g \
-      @builder.io/ai-shell \
-      bun \
-      degit \
-      genaiscript \
-      opencommit \
-      pnpm \
-      wrangler
-  end
+  npm install -g npm@latest
+  npm install -g \
+    @builder.io/ai-shell@latest \
+    bun@latest \
+    degit@latest \
+    genaiscript@latest \
+    opencommit@latest \
+    pnpm@latest \
+    wrangler@latest
 end
 
 function globals.python
