@@ -1,10 +1,16 @@
 #!/usr/bin/env fish
-
-# Display an xkcd comic using sixel graphics. Show the comic <number> if
-# given, or the latest comic by default.
+#
+# Display an xkcd comic using sixel graphics.
 #
 # Based on a bash script by https://gitlab.com/Matrixcoffee
 # Ported to fish by https://github.com/daveio
+#
+# USAGE
+#
+# sixkcd : Display the latest xkcd.
+# sixkcd NUMBER : Display the xkcd with the given NUMBER.
+#
+# ABOUT
 #
 # Uses iTerm2's imgcat if it can find it; this is quicker but can pop up
 # a warning on first use. You can either set IGNORE_IMGCAT to true in the
@@ -17,7 +23,15 @@
 # IGNORE_IMGCAT to true if you also have iTerm2 installed so that it uses
 # img2sixel instead of trying imgcat, which might work or might not.
 #
-# Dependencies:
+# CONFIGURATION
+#
+# See [ Configuration ] section.
+#
+# CHECK_ITERM2: enable terminal detection
+# IGNORE_IMGCAT: force use of img2sixel
+# SHOW_ITERM2_WARNING: show message if iTerm2 is not detected
+#
+# DEPENDENCIES
 #
 # imagemagick
 #   brew install imagemagick
@@ -36,24 +50,30 @@
 #   fish_add_path (brew --prefix curl)/bin
 # or wget
 #   brew install wget
-#
 
 # [ Configuration ]
+
 set CHECK_ITERM2 true
 set IGNORE_IMGCAT false
+set SHOW_ITERM2_WARNING true
 
 # [ Parameters ]
+
 set xkcdnumber $argv[1]
 
-# [ Terminal Detection ]
+# [ Terminal ]
+
 if test "$CHECK_ITERM2" = true
     if test "$TERM_PROGRAM" != "iTerm.app"
+      if test "$SHOW_ITERM2_WARNING" = true
         echo "No xkcd for you, this isn't iTerm2!"
-        exit 0
+      end
+      exit 0
     end
 end
 
-# [ Image display utility ]
+# [ Tooling ]
+
 if test "$IGNORE_IMGCAT" = true
     # Force img2sixel if IGNORE_IMGCAT is set
     if type -q img2sixel
@@ -73,6 +93,7 @@ else
 end
 
 # [ Functions ]
+
 function error --description "Print error message and exit"
     echo "Error: $argv" 1>&2
     exit 127
@@ -122,6 +143,7 @@ function decode_xkcd
 end
 
 # [ Main ]
+
 set xkcd_data (fetch_xkcd $xkcdnumber | decode_xkcd)
     or error "Metadata download failed."
 
