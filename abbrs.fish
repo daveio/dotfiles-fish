@@ -77,6 +77,7 @@ abbr -a dcu "docker compose up"
 abbr -a de "docker exec"
 abbr -a dei "docker exec -it"
 abbr -a dev devcontainer
+abbr -a dns dnscontrol
 abbr -a dp "docker pull"
 abbr -a dr "docker run"
 abbr -a dri "docker run -it"
