@@ -25,7 +25,8 @@
 #
 # CONFIGURATION
 #
-# See [ Configuration ] section.
+# You can set the following variables in the [ Configuration ] section,
+# or set them in your environment.
 #
 # CHECK_ITERM2: enable terminal detection
 # IGNORE_IMGCAT: force use of img2sixel
@@ -53,9 +54,11 @@
 
 # [ Configuration ]
 
-set CHECK_ITERM2 true
-set IGNORE_IMGCAT false
-set SHOW_ITERM2_WARNING true
+set -q CHECK_ITERM2; or set CHECK_ITERM2 true
+set -q IGNORE_IMGCAT; or set IGNORE_IMGCAT false
+set -q SHOW_ITERM2_WARNING; or set SHOW_ITERM2_WARNING true
+
+
 
 # [ Parameters ]
 
