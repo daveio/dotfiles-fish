@@ -134,3 +134,4 @@ abbr -a vi nvim
 abbr -a vim nvim
 abbr -a vue "pnpm run vue"
 abbr -a y "yt-dlp --cookies-from-browser firefox --remux-video mkv"
+abbr -a zj zellij
