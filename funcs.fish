@@ -120,6 +120,8 @@ function globals.python
 end
 
 function globals.ruby
+  gem update --system
+  gem update
   gem install \
     bundler \
     cocoapods \
@@ -133,6 +135,8 @@ function globals.ruby
     standard \
     syntax_tree \
     yard
+  gem update --system
+  gem update
 end
 
 function globals.dotnet
