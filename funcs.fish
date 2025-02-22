@@ -116,7 +116,6 @@ function globals.python
     jupyter-pieces \
     jupyter_base16_theme \
     jupyterlab-horizon-theme \
-    jupyterlab-pygments \
     jupyterlab_theme_sophon \
     matplotlib \
     scipy
@@ -212,4 +211,27 @@ function globals
   globals.rust
   rm -rf ~/.asdf/shims
   asdf reshim
+end
+
+function versions
+  set EXTRA_RUBY 3.3.7
+  set EXTRA_PYTHON 3.12.9 2.7.18
+
+  for i in (asdf plugin list)
+    asdf plugin remove $i
+    asdf plugin add $i
+  end
+
+  asdf install
+  asdf reshim
+
+  for i in $EXTRA_RUBY
+    asdf install ruby $i
+    asdf reshim
+  end
+
+  for i in $EXTRA_PYTHON
+    asdf install python $i
+    asdf reshim
+  end
 end
