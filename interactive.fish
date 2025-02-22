@@ -43,3 +43,6 @@ if test $DISABLE_ZELLIJ != true
   set ZELLIJ_AUTO_EXIT true
   eval (zellij setup --generate-auto-start fish | string collect)
 end
+
+# rust via asdf
+source /Users/dave/.asdf/installs/rust/1.85.0/env.fish

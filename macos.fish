@@ -45,12 +45,15 @@ end
 # --httptoolkit-end--
 
 # warp
-printf '\eP$f{"hook": "SourcedRcFileForWarp", "value": { "shell": "fish" }}\x9c'
+# printf '\eP$f{"hook": "SourcedRcFileForWarp", "value": { "shell": "fish" }}\x9c'
 
 # Added by LM Studio CLI (lms)
 set -gx PATH $PATH /Users/dave/.lmstudio/bin
 
 # gcloud
-source /Users/dave/.asdf/installs/gcloud/510.0.0/path.fish.inc
+source /Users/dave/.asdf/installs/gcloud/511.0.0/path.fish.inc
 complete -c gcloud -f -a '(__fish_argcomplete_complete gcloud)'
 complete -c gsutil -f -a '(__fish_argcomplete_complete gsutil)'
+
+# Orb Stack
+source ~/.orbstack/shell/init2.fish 2>/dev/null || :

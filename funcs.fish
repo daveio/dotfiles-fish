@@ -56,8 +56,13 @@ function globals.python
   # config
   set -lx PYTHON_DOWNGRADE_VERSION 3.12.9
 
+  # pip
+  pip install --upgrade pip setuptools wheel
+  asdf reshim
+
   # pipx
   pip install pipx
+  asdf reshim
   pipx uninstall-all
 
   # python 3.12
@@ -66,12 +71,13 @@ function globals.python
     bpytop \
     jupyterlab \
     markitdown \
-    n3map \
     pelican[markdown] \
     poetry \
     pygi \
     showcert \
     tidal-dl-ng[gui]
+
+  brew sh -c "pipx install --python ~/.asdf/installs/python/$PYTHON_DOWNGRADE_VERSION/bin/python3 n3map"
 
   # python 3.13+
   pipx install \
@@ -192,10 +198,18 @@ function globals.rust
 end
 
 function globals
+  asdf reshim
   globals.nodejs
+  asdf reshim
   globals.python
+  asdf reshim
   globals.ruby
+  asdf reshim
   globals.dotnet
+  asdf reshim
   globals.golang
+  asdf reshim
   globals.rust
+  rm -rf ~/.asdf/shims
+  asdf reshim
 end
