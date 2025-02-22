@@ -1,5 +1,5 @@
 set -gx DISABLE_ZELLIJ true
-set -gx EDITOR "zed -w"
+set -gx EDITOR "code -w"
 set -gx GHC_GITHUB_USER daveio
 set -gx GHC_ROOT /Users/dave/src
 set -gx MONO_GAC_PREFIX /opt/homebrew

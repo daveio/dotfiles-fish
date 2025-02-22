@@ -1,3 +1,5 @@
+# -*- mode: go-template; tab_size: 2; hard_tabs: false -*-
+
 
   # BEGIN macOS
     # Homebrew
