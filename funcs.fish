@@ -216,6 +216,7 @@ end
 function versions
   set EXTRA_RUBY 3.3.7
   set EXTRA_PYTHON 3.12.9 2.7.18
+  set RUST_VERSION 1.85.0
 
   for i in (asdf plugin list)
     asdf plugin remove $i
@@ -234,6 +235,8 @@ function versions
     asdf install python $i
     asdf reshim
   end
+
+  rustup default $RUST_VERSION
 end
 
 function plugins
