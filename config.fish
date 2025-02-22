@@ -5,6 +5,6 @@ source $HOME/.config/fish/aliases.fish
 source $HOME/.config/fish/funcs.fish
 
 if status is-interactive
-  source $HOME/.config/fish/template.fish
+  source $HOME/.config/fish/os.fish
   source $HOME/.config/fish/interactive.fish
 end

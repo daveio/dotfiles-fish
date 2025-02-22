@@ -92,3 +92,4 @@ complete -c gsutil -f -a '(__fish_argcomplete_complete gsutil)'
 
 # Orb Stack
 source ~/.orbstack/shell/init2.fish 2>/dev/null || :
+
