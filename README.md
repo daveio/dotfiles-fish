@@ -2,11 +2,13 @@
 
 Fish shell configuration. Comes as it is, maybe it's useful to someone.
 
-Under the hood I use `chezmoi` to manage this, this published version is the output of the templates. Templated files are `config.fish` and `interactive.fish` which are modified based on the invoking OS.
+Under the hood I use `chezmoi` to manage this, this published version is the output of the templates.
+
+The only templated file is `os.fish` which is modified based on the invoking OS.
 
 More about `chezmoi` at [**twpayne/chezmoi**](https://github.com/twpayne/chezmoi).
 
-You don't need to worry about this though, as I say, this repo contains the resolved templates for the macOS platform.
+You don't need to worry about this, though; as I say, this repo contains the resolved templates for the macOS platform.
 
 ## Plugins
 
