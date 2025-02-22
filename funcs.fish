@@ -235,3 +235,10 @@ function versions
     asdf reshim
   end
 end
+
+function plugins
+  for i in (cat $HOME/.tool-versions | awk '{ print $1 }')
+    asdf plugin add $i
+    asdf reshim
+  end
+end
