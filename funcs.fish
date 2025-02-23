@@ -1,15 +1,3 @@
-function asdf-latest
-  echo "updating asdf..." 1>&2
-  asdf update --head > /dev/null 2>/dev/null
-  echo "updating plugins..." 1>&2
-  asdf plugin update --all > /dev/null 2>/dev/null
-  echo "getting latest versions..." 1>&2
-  for i in (asdf plugin list)
-    echo -n "$i "
-    asdf latest $i
-  end
-end
-
 function nas-docker
   set -gx DOCKER_HOST tcp://7t54.myqnapcloud.com:2376
   set -gx DOCKER_TLS_VERIFY 1
@@ -59,15 +47,15 @@ function globals.python
 
   # pip
   pip install --upgrade pip setuptools wheel
-  asdf reshim
+  mise reshim
 
   # pipx
   pip install pipx
-  asdf reshim
+  mise reshim
   pipx uninstall-all
 
   # python 3.12
-  pipx install --python ~/.asdf/installs/python/$PYTHON_DOWNGRADE_VERSION/bin/python3 \
+  pipx install --python $HOME/.local/share/mise/installs/python/$PYTHON_DOWNGRADE_VERSION/bin/python3 \
     bpython \
     bpytop \
     jupyterlab \
@@ -78,7 +66,7 @@ function globals.python
     showcert \
     tidal-dl-ng[gui]
 
-  brew sh -c "pipx install --python ~/.asdf/installs/python/$PYTHON_DOWNGRADE_VERSION/bin/python3 n3map"
+  brew sh -c "pipx install --python $HOME/.local/share/mise/installs/python//$PYTHON_DOWNGRADE_VERSION/bin/python3 n3map"
 
   # python 3.13+
   pipx install \
@@ -123,6 +111,8 @@ function globals.python
   pipx inject poetry \
     poetry-audit-plugin \
     poetry-plugin-shell
+
+  mise reshim
 end
 
 function globals.ruby
@@ -198,51 +188,18 @@ function globals.rust
 end
 
 function globals
-  asdf reshim
+  mise reshim
   globals.nodejs
-  asdf reshim
+  mise reshim
   globals.python
-  asdf reshim
+  mise reshim
   globals.ruby
-  asdf reshim
+  mise reshim
   globals.dotnet
-  asdf reshim
+  mise reshim
   globals.golang
-  asdf reshim
+  mise reshim
   globals.rust
-  rm -rf ~/.asdf/shims
-  asdf reshim
-end
-
-function versions
-  set EXTRA_RUBY 3.3.7
-  set EXTRA_PYTHON 3.12.9 2.7.18
-  set RUST_VERSION 1.85.0
-
-  for i in (asdf plugin list)
-    asdf plugin remove $i
-    asdf plugin add $i
-  end
-
-  asdf install
-  asdf reshim
-
-  for i in $EXTRA_RUBY
-    asdf install ruby $i
-    asdf reshim
-  end
-
-  for i in $EXTRA_PYTHON
-    asdf install python $i
-    asdf reshim
-  end
-
-  rustup default $RUST_VERSION
-end
-
-function plugins
-  for i in (cat $HOME/.tool-versions | awk '{ print $1 }')
-    asdf plugin add $i
-    asdf reshim
-  end
+  rm -rf $HOME/.local/share/mise/shims
+  mise reshim
 end
