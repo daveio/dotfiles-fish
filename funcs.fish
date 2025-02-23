@@ -49,6 +49,7 @@ function globals.nodejs
     genaiscript@latest \
     opencommit@latest \
     pnpm@latest \
+    renovate@latest \
     wrangler@latest
 end
 
