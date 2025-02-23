@@ -7,6 +7,9 @@ fish_config theme choose "Rosé Pine"
 # iTerm2
 source $HOME/.iterm2_shell_integration.fish
 
+# mise
+mise activate fish | source
+
 # zoxide
 zoxide init fish | source
 
