@@ -30,9 +30,6 @@ if test $DISABLE_ZELLIJ != true
   eval (zellij setup --generate-auto-start fish | string collect)
 end
 
-# rust via asdf
-source /Users/dave/.asdf/installs/rust/1.85.0/env.fish
-
 # krew
 set -q KREW_ROOT; and set -gx PATH $PATH $KREW_ROOT/.krew/bin; or set -gx PATH $PATH $HOME/.krew/bin
 
@@ -86,7 +83,7 @@ end
 set -gx PATH $PATH /Users/dave/.lmstudio/bin
 
 # gcloud
-source /Users/dave/.asdf/installs/gcloud/511.0.0/path.fish.inc
+# source /Users/dave/.asdf/installs/gcloud/511.0.0/path.fish.inc
 complete -c gcloud -f -a '(__fish_argcomplete_complete gcloud)'
 complete -c gsutil -f -a '(__fish_argcomplete_complete gsutil)'
 

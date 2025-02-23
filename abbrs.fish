@@ -1,6 +1,5 @@
 abbr -a 7z 7zz
 abbr -a a2 "aria2c -x8 -s8"
-abbr -a ars "asdf reshim"
 abbr -a b "baselime"
 abbr -a ba "bundle add"
 abbr -a bad "bundle add --group development"
@@ -118,7 +117,6 @@ abbr -a pnr "pnpm run"
 abbr -a pnx "pnpm dlx"
 abbr -a pping "prettyping --nolegend"
 abbr -a pr "poetry run"
-abbr -a px "pipx install --python ~/.asdf/installs/python/3.12.8/bin/python3"
 abbr -a s skaffold
 abbr -a sbrse "sudo brew services"
 abbr -a sf "subl ~/.config/fish"
