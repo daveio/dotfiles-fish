@@ -90,6 +90,4 @@ source /Users/dave/.asdf/installs/gcloud/511.0.0/path.fish.inc
 complete -c gcloud -f -a '(__fish_argcomplete_complete gcloud)'
 complete -c gsutil -f -a '(__fish_argcomplete_complete gsutil)'
 
-# Orb Stack
-source ~/.orbstack/shell/init2.fish 2>/dev/null || :
 
