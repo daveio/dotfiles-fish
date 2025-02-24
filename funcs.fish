@@ -74,6 +74,7 @@ function globals.python
     asitop \
     autopep8 \
     black \
+    braindrop \
     flake8 \
     httpie \
     ipython \
