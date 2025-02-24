@@ -123,6 +123,7 @@ abbr -a sf "subl ~/.config/fish"
 abbr -a sw switcher
 abbr -a t tlm
 abbr -a tailscale "/Applications/Tailscale.app/Contents/MacOS/Tailscale"
+abbr -a task "ruby -Ilib ./bin/notion-task"
 abbr -a tdl "tidal-dl -l"
 abbr -a te "tlm explain"
 abbr -a ts "tlm suggest"
