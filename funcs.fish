@@ -123,6 +123,7 @@ function globals.ruby
     bundler \
     cocoapods \
     httparty \
+    notion-task \
     rails \
     rubocop \
     rubocop-rspec \
