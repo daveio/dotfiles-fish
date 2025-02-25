@@ -76,6 +76,7 @@ function globals.python
     black \
     braindrop \
     flake8 \
+    git+https://github.com/itsnexn/raindropcli.git@master \
     httpie \
     ipython \
     isort \
@@ -112,6 +113,8 @@ function globals.python
   pipx inject poetry \
     poetry-audit-plugin \
     poetry-plugin-shell
+  pipx inject raindropcli \
+    requests
 
   mise reshim
 end
