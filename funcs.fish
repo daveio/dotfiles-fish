@@ -116,6 +116,8 @@ function globals.python
     poetry-plugin-shell
   pipx inject raindropcli \
     requests
+  pipx inject thefuck \
+    distutils
 
   mise reshim
 end
