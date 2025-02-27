@@ -91,7 +91,6 @@ function globals.python
     remarshal \
     sherlock-project \
     shyaml \
-    thefuck \
     toml-sort \
     virtualfish \
     xonsh \
@@ -116,8 +115,6 @@ function globals.python
     poetry-plugin-shell
   pipx inject raindropcli \
     requests
-  pipx inject thefuck \
-    distutils
 
   mise reshim
 end
