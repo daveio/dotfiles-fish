@@ -99,7 +99,7 @@ abbr -a kn1j "ssh -J dave@10.0.101.10:212 dave@10.23.23.100"
 abbr -a kpf "kubectl port-forward"
 abbr -a l linkerd
 abbr -a lics "cd $LICS"
-abbr -a ls eza
+abbr -a ls "eza --icons=always --hyperlink --git --git-repos --group-directories-first -O"
 abbr -a m minikube
 abbr -a mp mprocs
 abbr -a n nerdctl

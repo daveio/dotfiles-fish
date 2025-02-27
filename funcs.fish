@@ -91,6 +91,7 @@ function globals.python
     remarshal \
     sherlock-project \
     shyaml \
+    thefuck \
     toml-sort \
     virtualfish \
     xonsh \
