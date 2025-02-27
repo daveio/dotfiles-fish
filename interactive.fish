@@ -90,4 +90,5 @@ set -gx PATH $PATH /Users/dave/.lmstudio/bin
 complete -c gcloud -f -a '(__fish_argcomplete_complete gcloud)'
 complete -c gsutil -f -a '(__fish_argcomplete_complete gsutil)'
 
-
+# thefuck
+thefuck --alias | source
