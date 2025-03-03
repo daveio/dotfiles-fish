@@ -208,3 +208,7 @@ function globals
   rm -rf $HOME/.local/share/mise/shims
   mise reshim
 end
+
+function github-auth
+  set -gx GITHUB_TOKEN (gh auth token)
+end
