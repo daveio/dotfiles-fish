@@ -103,6 +103,7 @@ abbr -a ls "eza --icons=always --hyperlink --git --git-repos --group-directories
 abbr -a m minikube
 abbr -a mp mprocs
 abbr -a n nerdctl
+abbr -a nas "command ssh nas"
 abbr -a o doctl
 abbr -a oco "oco --fgm"
 abbr -a p poetry
