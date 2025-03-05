@@ -31,6 +31,7 @@ end
 function globals.nodejs
   npm install -g npm@latest
   npm install -g \
+    @anthropic-ai/claude-code \
     @builder.io/ai-shell@latest \
     bun@latest \
     degit@latest \
