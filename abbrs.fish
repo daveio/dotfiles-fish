@@ -70,6 +70,7 @@ abbr -a cme "chezmoi edit"
 abbr -a cmef "chezmoi edit ~/.config/fish/config.fish"
 abbr -a cs 'codesign --force --sign "Developer ID Application: David Williams"'
 abbr -a d docker
+abbr -a daveio "cd $HOME/src/github.com/daveio"
 abbr -a dc docker-compose
 abbr -a dcd "docker compose down"
 abbr -a dcu "docker compose up"
