@@ -10,6 +10,9 @@ completions/tide.fish
 conf.d/**
 fish_variables
 fishd.tmp.*
-functions/**
 secrets.fish
 themes/**
+
+
+functions/**
+!functions/kill-oco.fish
