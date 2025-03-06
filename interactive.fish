@@ -14,23 +14,23 @@ mise activate fish | source
 zoxide init fish | source
 
 # atuin via ctrl+r and not up arrow
-set -gx ATUIN_NOBIND "true"
+set -gx ATUIN_NOBIND true
 atuin init fish | source
 bind \cr _atuin_search
 bind -M insert \cr _atuin_search
 
 # virtualfish
 if set -q VIRTUAL_ENV
-  echo -n -s (set_color -b blue white) "(" (basename "$VIRTUAL_ENV") ")" (set_color normal) " "
+    echo -n -s (set_color -b blue white) "(" (basename "$VIRTUAL_ENV") ")" (set_color normal) " "
 end
 
 # sixkcd as motd
 # $HOME/.config/fish/tools/sixkcd
 
 if test $DISABLE_ZELLIJ != true
-  set ZELLIJ_AUTO_ATTACH true
-  set ZELLIJ_AUTO_EXIT true
-  eval (zellij setup --generate-auto-start fish | string collect)
+    set ZELLIJ_AUTO_ATTACH true
+    set ZELLIJ_AUTO_EXIT true
+    eval (zellij setup --generate-auto-start fish | string collect)
 end
 
 # krew
@@ -54,23 +54,24 @@ direnv hook fish | source
 
 # Homebrew completions
 if test -d (brew --prefix)"/share/fish/completions"
-  set -p fish_complete_path (brew --prefix)/share/fish/completions
+    set -p fish_complete_path (brew --prefix)/share/fish/completions
 end
 if test -d (brew --prefix)"/share/fish/vendor_completions.d"
-  set -p fish_complete_path (brew --prefix)/share/fish/vendor_completions.d
+    set -p fish_complete_path (brew --prefix)/share/fish/vendor_completions.d
 end
 
 # homebrew-command-not-found
 set HB_CNF_HANDLER (brew --repository)"/Library/Taps/homebrew/homebrew-command-not-found/handler.fish"
 if test -f $HB_CNF_HANDLER
-  source $HB_CNF_HANDLER
+    source $HB_CNF_HANDLER
 end
 
 # --httptoolkit--
 # This section will be reset each time a HTTP Toolkit terminal is opened
 if [ -n "$HTTP_TOOLKIT_ACTIVE" ]
     # When HTTP Toolkit is active, we inject various overrides into PATH
-    set -x PATH "/Applications/HTTP Toolkit.app/Contents/Resources/httptoolkit-server/overrides/path" $PATH;
+    set -x PATH "/Applications/HTTP Toolkit.app/Contents/Resources/httptoolkit-server/overrides/path" $PATH
+
     if command -v winpty >/dev/null 2>&1
         # Work around for winpty's hijacking of certain commands
         alias php=php

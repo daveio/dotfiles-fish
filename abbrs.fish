@@ -1,6 +1,6 @@
 abbr -a 7z 7zz
 abbr -a a2 "aria2c -x8 -s8"
-abbr -a b "baselime"
+abbr -a b baselime
 abbr -a ba "bundle add"
 abbr -a bad "bundle add --group development"
 abbr -a be "bundle exec"
@@ -61,8 +61,8 @@ abbr -a brupg "brew upgrade"
 abbr -a brupi "brew unpin"
 abbr -a bruse "brew uses"
 abbr -a bruta "brew untap"
-abbr -a c "code"
-abbr -a cm "chezmoi"
+abbr -a c code
+abbr -a cm chezmoi
 abbr -a cmad "chezmoi add"
 abbr -a cmade "chezmoi add --encrypt"
 abbr -a cmap "chezmoi apply"
@@ -109,7 +109,7 @@ abbr -a o doctl
 abbr -a oco "oco --fgm"
 abbr -a p poetry
 abbr -a pf "open -a Path\ Finder"
-abbr -a ping "gping"
+abbr -a ping gping
 abbr -a pio platformio
 abbr -a pn pnpm
 abbr -a pna "pnpm add"
