@@ -85,6 +85,7 @@ function globals.python
     legit \
     mypy \
     nyx \
+    pipenv \
     pre-commit \
     pylint \
     pyoxidizer \
