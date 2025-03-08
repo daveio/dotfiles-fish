@@ -153,11 +153,13 @@ end
 
 function globals.golang
     for i in \
+        github.com/caddyserver/xcaddy/cmd/xcaddy@latest \
         github.com/evilmartians/lefthook@latest \
         github.com/go-acme/lego/v4/cmd/lego@latest \
         github.com/google/gops@latest \
         github.com/goreleaser/goreleaser/v2@latest \
         github.com/jesseduffield/lazygit@latest \
+        github.com/maaslalani/nap@main \
         github.com/nsf/gocode@latest \
         github.com/schollz/croc/v10@latest \
         github.com/sigstore/cosign/v2/cmd/cosign@latest \
