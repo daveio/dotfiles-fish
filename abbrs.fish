@@ -62,6 +62,7 @@ abbr -a brupi "brew unpin"
 abbr -a bruse "brew uses"
 abbr -a bruta "brew untap"
 abbr -a c code
+abbr -a cat bat
 abbr -a cm chezmoi
 abbr -a cmad "chezmoi add"
 abbr -a cmade "chezmoi add --encrypt"

@@ -93,6 +93,7 @@ function globals.python
         remarshal \
         sherlock-project \
         shyaml \
+        sourcery \
         toml-sort \
         virtualfish \
         xonsh \
@@ -152,6 +153,7 @@ end
 
 function globals.golang
     for i in \
+        github.com/evilmartians/lefthook@latest \
         github.com/go-acme/lego/v4/cmd/lego@latest \
         github.com/google/gops@latest \
         github.com/goreleaser/goreleaser/v2@latest \
