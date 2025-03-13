@@ -36,6 +36,7 @@ function globals.nodejs
         bun@latest \
         degit@latest \
         genaiscript@latest \
+        husky@latest \
         opencommit@latest \
         pnpm@latest \
         renovate@latest \
