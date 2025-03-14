@@ -44,113 +44,32 @@ function globals.nodejs
 end
 
 function globals.python
-    # config
-    set -lx PYTHON_DOWNGRADE_VERSION 3.12.9
-
-    # pip
-    pip install --upgrade pip setuptools wheel
-    mise reshim
-
-    # pipx
-    pip install pipx
-    mise reshim
-    pipx uninstall-all
-
-    # python 3.12
-    pipx install --python $HOME/.local/share/mise/installs/python/$PYTHON_DOWNGRADE_VERSION/bin/python3 \
-        bpython \
-        bpytop \
-        jupyterlab \
-        markitdown \
-        pelican[markdown] \
-        poetry \
-        pygi \
-        showcert \
-        tidal-dl-ng[gui]
-
     brew sh -c "pipx install --python $HOME/.local/share/mise/installs/python//$PYTHON_DOWNGRADE_VERSION/bin/python3 n3map"
-
-    # python 3.13+
-    pipx install \
-        aerleon \
-        asitop \
-        autopep8 \
-        black \
-        braindrop \
-        flake8 \
-        git+https://github.com/itsnexn/raindropcli.git@master \
-        httpie \
-        ipython \
-        isort \
-        jc \
-        legit \
-        mypy \
-        nyx \
-        pipenv \
-        pre-commit \
-        pylint \
-        pyoxidizer \
-        pyright \
-        remarshal \
-        sherlock-project \
-        shyaml \
-        sourcery \
-        thefuck \
-        toml-sort \
-        virtualfish \
-        xonsh \
-        yamale \
-        yamllint \
-        yt-dlp
-
+    pipx install git+https://github.com/itsnexn/raindropcli.git@master
     # injections
-    pipx inject bpython \
-        urwid
-    pipx inject jupyterlab \
-        PyQt6 \
-        PySide6 \
-        jupyter-pieces \
-        jupyter_base16_theme \
-        jupyterlab-horizon-theme \
-        jupyterlab_theme_sophon \
-        matplotlib \
-        scipy
-    pipx inject poetry \
-        poetry-audit-plugin \
-        poetry-plugin-shell
-    pipx inject raindropcli \
-        requests
-
+    # pipx inject bpython \
+    #     urwid
+    # pipx inject jupyterlab \
+    #     PyQt6 \
+    #     PySide6 \
+    #     jupyter-pieces \
+    #     jupyter_base16_theme \
+    #     jupyterlab-horizon-theme \
+    #     jupyterlab_theme_sophon \
+    #     matplotlib \
+    #     scipy
+    # pipx inject poetry \
+    #     poetry-audit-plugin \
+    #     poetry-plugin-shell
+    # pipx inject raindropcli \
+    #     requests
     mise reshim
 end
 
 function globals.ruby
     gem update --system
+    gem install rubygems-server
     gem update
-    gem install \
-        bundler \
-        cocoapods \
-        httparty \
-        notion-task \
-        rails \
-        rubocop \
-        rubocop-rspec \
-        rubyfmt \
-        rubygems-server \
-        solargraph \
-        standard \
-        syntax_tree \
-        yard
-    gem update --system
-    gem update
-end
-
-function globals.dotnet
-    for i in \
-        dotnet-dump \
-        Microsoft.CST.DevSkim.CLI
-        dotnet tool install --global $i
-    end
 end
 
 function globals.golang
@@ -171,49 +90,11 @@ function globals.golang
     end
 end
 
-function globals.rust
-    cargo install \
-        bat \
-        cargo-edit \
-        cargo-generate \
-        cargo-outdated \
-        cargo-release \
-        cargo-tree \
-        cargo-update \
-        cargo-watch \
-        exa \
-        fast-conventional \
-        fd-find \
-        git-absorb \
-        git-brws \
-        git-delta \
-        gitoxide \
-        gitui \
-        hgrep \
-        hyperfine \
-        just \
-        mdbook \
-        rage \
-        ripgrep \
-        rops-cli \
-        sd \
-        tokei \
-        xsv
-end
-
 function globals
-    mise reshim
-    globals.nodejs
-    mise reshim
-    globals.python
-    mise reshim
-    globals.ruby
-    mise reshim
-    globals.dotnet
-    mise reshim
     globals.golang
-    mise reshim
-    globals.rust
+    globals.nodejs
+    globals.python
+    globals.ruby
     rm -rf $HOME/.local/share/mise/shims
     mise reshim
 end
