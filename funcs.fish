@@ -195,6 +195,7 @@ function globals.rust
         mdbook \
         rage \
         ripgrep \
+        rops-cli \
         sd \
         tokei \
         xsv
