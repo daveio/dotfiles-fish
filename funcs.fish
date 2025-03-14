@@ -29,8 +29,7 @@ function cmae
 end
 
 function globals.nodejs
-    npm install -g npm@latest
-    npm install -g \
+    bun install -g \
         @anthropic-ai/claude-code \
         @builder.io/ai-shell@latest \
         bun@latest \
@@ -41,29 +40,6 @@ function globals.nodejs
         pnpm@latest \
         renovate@latest \
         wrangler@latest
-end
-
-function globals.python
-    brew sh -c "pipx install --python $HOME/.local/share/mise/installs/python//$PYTHON_DOWNGRADE_VERSION/bin/python3 n3map"
-    pipx install git+https://github.com/itsnexn/raindropcli.git@master
-    # injections
-    # pipx inject bpython \
-    #     urwid
-    # pipx inject jupyterlab \
-    #     PyQt6 \
-    #     PySide6 \
-    #     jupyter-pieces \
-    #     jupyter_base16_theme \
-    #     jupyterlab-horizon-theme \
-    #     jupyterlab_theme_sophon \
-    #     matplotlib \
-    #     scipy
-    # pipx inject poetry \
-    #     poetry-audit-plugin \
-    #     poetry-plugin-shell
-    # pipx inject raindropcli \
-    #     requests
-    mise reshim
 end
 
 function globals.ruby
@@ -93,7 +69,6 @@ end
 function globals
     globals.golang
     globals.nodejs
-    globals.python
     globals.ruby
     rm -rf $HOME/.local/share/mise/shims
     mise reshim
