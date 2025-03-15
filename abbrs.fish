@@ -128,6 +128,7 @@ abbr -a task notion-task
 abbr -a task-dev "ruby -Ilib ./bin/notion-task"
 abbr -a tdl "tidal-dl -l"
 abbr -a te "tlm explain"
+abbr -a tilde "command ssh tilde"
 abbr -a ts "tlm suggest"
 abbr -a v vue
 abbr -a venv "python -m venv"
