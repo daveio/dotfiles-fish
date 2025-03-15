@@ -36,6 +36,7 @@ function globals
         'github.com/theupdateframework/go-tuf/cmd/tuf-client@latest' \
         'sigs.k8s.io/kind@latest'
 
+        echo "Go: $i"
         go install $i
     end
 
@@ -48,13 +49,16 @@ function globals
         'opencommit@latest' \
         'wrangler@latest'
 
+        echo "Bun: $i"
         bun install -g $i
+        bun pm trust --all
     end
 
     # ruby
     for i in \
         rubygems-server
 
+        echo "Gem: $i"
         gem install $i
     end
 end
