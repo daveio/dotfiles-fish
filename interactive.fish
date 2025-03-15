@@ -5,7 +5,7 @@ set fish_greeting
 source $HOME/.iterm2_shell_integration.fish
 
 # mise
-mise activate fish | source
+# mise activate fish | source
 
 # zoxide
 zoxide init fish | source
@@ -87,9 +87,6 @@ set -gx PATH $PATH /Users/dave/.lmstudio/bin
 # source /Users/dave/.asdf/installs/gcloud/511.0.0/path.fish.inc
 complete -c gcloud -f -a '(__fish_argcomplete_complete gcloud)'
 complete -c gsutil -f -a '(__fish_argcomplete_complete gsutil)'
-
-# thefuck
-thefuck --alias | source
 
 # monokai theme
 set fish_color_normal F8F8F2 # the default color

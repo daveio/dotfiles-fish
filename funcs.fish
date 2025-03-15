@@ -28,52 +28,6 @@ function cmae
     chezmoi add --encrypt $argv
 end
 
-function globals.nodejs
-    bun install -g \
-        @anthropic-ai/claude-code \
-        @builder.io/ai-shell@latest \
-        bun@latest \
-        degit@latest \
-        genaiscript@latest \
-        husky@latest \
-        opencommit@latest \
-        pnpm@latest \
-        renovate@latest \
-        wrangler@latest
-end
-
-function globals.ruby
-    gem update --system
-    gem install rubygems-server
-    gem update
-end
-
-function globals.golang
-    for i in \
-        github.com/caddyserver/xcaddy/cmd/xcaddy@latest \
-        github.com/evilmartians/lefthook@latest \
-        github.com/go-acme/lego/v4/cmd/lego@latest \
-        github.com/google/gops@latest \
-        github.com/goreleaser/goreleaser/v2@latest \
-        github.com/jesseduffield/lazygit@latest \
-        github.com/maaslalani/nap@main \
-        github.com/nsf/gocode@latest \
-        github.com/schollz/croc/v10@latest \
-        github.com/sigstore/cosign/v2/cmd/cosign@latest \
-        github.com/theupdateframework/go-tuf/cmd/tuf-client@latest \
-        sigs.k8s.io/kind@latest
-        go install $i
-    end
-end
-
-function globals
-    globals.golang
-    globals.nodejs
-    globals.ruby
-    rm -rf $HOME/.local/share/mise/shims
-    mise reshim
-end
-
 function github-auth
     set -gx GITHUB_TOKEN (gh auth token)
 end
