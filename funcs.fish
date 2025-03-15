@@ -113,3 +113,20 @@ function wipe-workflows -d "Wipe all workflow runs for a GitHub repository"
     echo "Wiping all workflow runs for $REPONAME..."
     gh api --paginate "/repos/$REPONAME/actions/runs" | jq '.workflow_runs.[].id' | parallel -j 16 "echo {}; gh api --silent -X DELETE /repos/$REPONAME/actions/runs/{}"
 end
+
+function pull-all
+    for i in *
+        echo "$i"
+        cd $i
+        echo all
+        git fetch --all
+        echo tags
+        git fetch --tags
+        echo both
+        git fetch --all --tags
+        echo pull
+        git pull
+        echo out
+        cd ..
+    end
+end

@@ -16,3 +16,5 @@ themes/**
 
 functions/**
 !functions/kill-oco.fish
+
+.vscode/
