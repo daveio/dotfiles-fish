@@ -47,6 +47,7 @@ function globals
         '@prettier/plugin-pug@latest' \
         '@prettier/plugin-ruby@latest' \
         '@prettier/plugin-xml@latest' \
+        '@stedi/prettier-plugin-jsonata@latest' \
         'degit@latest' \
         'firebase-tools@latest' \
         'genaiscript@latest' \
@@ -64,7 +65,6 @@ function globals
         'prettier-plugin-go-template@latest' \
         'prettier-plugin-java@latest' \
         'prettier-plugin-jinja-template@latest' \
-        'prettier-plugin-jsonata@latest' \
         'prettier-plugin-kotlin@latest' \
         'prettier-plugin-motoko@latest' \
         'prettier-plugin-nginx@latest' \
