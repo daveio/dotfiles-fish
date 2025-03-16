@@ -43,12 +43,40 @@ function globals
     # node (using bun)
     for i in \
         '@builder.io/ai-shell@latest' \
+        '@prettier/plugin-php@latest' \
+        '@prettier/plugin-pug@latest' \
+        '@prettier/plugin-ruby@latest' \
+        '@prettier/plugin-xml@latest' \
         'degit@latest' \
+        'firebase-tools@latest' \
         'genaiscript@latest' \
         'husky@latest' \
         'http-server@latest' \
         'localtunnel@latest' \
         'opencommit@latest' \
+        'prettier@latest' \
+        'prettier-plugin-apex@latest' \
+        'prettier-plugin-astro@latest' \
+        'prettier-plugin-elm@latest' \
+        'prettier-plugin-erb@latest' \
+        'prettier-plugin-gherkin@latest' \
+        'prettier-plugin-glsl@latest' \
+        'prettier-plugin-go-template@latest' \
+        'prettier-plugin-java@latest' \
+        'prettier-plugin-jinja-template@latest' \
+        'prettier-plugin-jsonata@latest' \
+        'prettier-plugin-kotlin@latest' \
+        'prettier-plugin-motoko@latest' \
+        'prettier-plugin-nginx@latest' \
+        'prettier-plugin-prisma@latest' \
+        'prettier-plugin-properties@latest' \
+        'prettier-plugin-rust@latest' \
+        'prettier-plugin-sh@latest' \
+        'prettier-plugin-solidity@latest' \
+        'prettier-plugin-sql@latest' \
+        'prettier-plugin-sql-cst@latest' \
+        'prettier-plugin-svelte@latest' \
+        'prettier-plugin-toml@latest' \
         'wrangler@latest'
 
         echo "Bun: $i"
