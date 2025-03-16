@@ -49,7 +49,7 @@ function globals
         '@prettier/plugin-xml@latest' \
         'degit@latest' \
         'firebase-tools@latest' \
-        'genaiscript@latest' \
+        # 'genaiscript@latest' \
         'husky@latest' \
         'http-server@latest' \
         'localtunnel@latest' \
@@ -70,8 +70,7 @@ function globals
 
         echo "Bun: $i"
         bun install -g $i
-        bun pm -g trust --all
-    end
+    end; bun pm -g trust --all
 
     # ruby
     for i in \
