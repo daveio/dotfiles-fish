@@ -70,7 +70,9 @@ function globals
 
         echo "Bun: $i"
         bun install -g $i
-    end; bun pm -g trust --all
+        bun pm trust -g --all
+    end
+    bun pm trust -g --all
 
     # ruby
     for i in \
