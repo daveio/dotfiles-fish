@@ -8,3 +8,4 @@ if status is-interactive
     source $HOME/.config/fish/os.fish
     source $HOME/.config/fish/interactive.fish
 end
+

@@ -46,6 +46,8 @@ function globals
         'degit@latest' \
         'genaiscript@latest' \
         'husky@latest' \
+        'http-server@latest' \
+        'localtunnel@latest' \
         'opencommit@latest' \
         'wrangler@latest'
 
