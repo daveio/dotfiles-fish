@@ -73,18 +73,14 @@ function wipe-workflows -d "Wipe all workflow runs for a GitHub repository"
     gh api --paginate "/repos/$REPONAME/actions/runs" | jq '.workflow_runs.[].id' | parallel -j 16 "echo {}; gh api --silent -X DELETE /repos/$REPONAME/actions/runs/{}"
 end
 
-function pull-all
+function yank-all
     for i in *
         echo "$i"
         cd $i
-        echo all
-        git fetch --all
-        echo tags
-        git fetch --tags
-        echo both
-        git fetch --all --tags
+        echo fetch
+        git fetch --all --tags --prune --jobs=8 --recurse-submodules=yes
         echo pull
-        git pull
+        git pull --stat --tags --prune --jobs=8 --recurse-submodules=yes
         echo out
         cd ..
     end

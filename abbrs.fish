@@ -87,10 +87,8 @@ abbr -a g gcloud
 abbr -a ga "git aa"
 abbr -a gaa "git aa"
 abbr -a gcam "git cam"
-abbr -a gfa "gk ws fetch -a -- --all --tags --prune --jobs=8 --recurse-submodules=yes"
 abbr -a gl glooctl
 abbr -a gp "git p"
-abbr -a gpa "gk ws pull -a -- --stat --tags --prune --jobs=8 --recurse-submodules=yes"
 abbr -a gpum "git p -u origin main"
 abbr -a gpums "git p -u origin master"
 abbr -a h helm
