@@ -7,6 +7,10 @@ completions/replay.fish
 completions/spark.fish
 completions/tag.fish
 completions/tide.fish
+completions/git-forgit.bash
+completions/git-forgit.fish
+completions/_git-forgit
+
 conf.d/**
 fish_variables
 fishd.tmp.*

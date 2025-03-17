@@ -19,68 +19,7 @@ function fzf --wraps="fzf"
 end
 
 function globals
-    # leftover globals that can't be managed with mise right now
-
-    # go
-    for i in \
-        'github.com/caddyserver/xcaddy/cmd/xcaddy@latest' \
-        'github.com/evilmartians/lefthook@latest' \
-        'github.com/go-acme/lego/v4/cmd/lego@latest' \
-        'github.com/google/gops@latest' \
-        'github.com/goreleaser/goreleaser/v2@latest' \
-        'github.com/jesseduffield/lazygit@latest' \
-        'github.com/maaslalani/nap@main' \
-        'github.com/nsf/gocode@latest' \
-        'github.com/schollz/croc/v10@latest' \
-        'github.com/sigstore/cosign/v2/cmd/cosign@latest' \
-        'github.com/theupdateframework/go-tuf/cmd/tuf-client@latest' \
-        'sigs.k8s.io/kind@latest'
-
-        echo "Go: $i"
-        go install $i
-    end
-
-    # node (using bun)
-    for i in \
-        '@builder.io/ai-shell@latest' \
-        '@prettier/plugin-php@latest' \
-        '@prettier/plugin-pug@latest' \
-        '@prettier/plugin-ruby@latest' \
-        '@prettier/plugin-xml@latest' \
-        'degit@latest' \
-        'firebase-tools@latest' \
-        # 'genaiscript@latest' \
-        'husky@latest' \
-        'http-server@latest' \
-        'localtunnel@latest' \
-        'opencommit@latest' \
-        'prettier@latest' \
-        'prettier-plugin-astro@latest' \
-        'prettier-plugin-erb@latest' \
-        'prettier-plugin-go-template@latest' \
-        'prettier-plugin-java@latest' \
-        'prettier-plugin-jinja-template@latest' \
-        'prettier-plugin-nginx@latest' \
-        'prettier-plugin-properties@latest' \
-        'prettier-plugin-rust@latest' \
-        'prettier-plugin-sh@latest' \
-        'prettier-plugin-svelte@latest' \
-        'prettier-plugin-toml@latest' \
-        'wrangler@latest'
-
-        echo "Bun: $i"
-        bun install -g $i
-        bun pm trust -g --all
-    end
-    bun pm trust -g --all
-
-    # ruby
-    for i in \
-        rubygems-server
-
-        echo "Gem: $i"
-        gem install $i
-    end
+  gem install rubygems-server
 end
 
 function cma
