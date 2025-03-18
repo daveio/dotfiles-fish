@@ -82,7 +82,7 @@ abbr -a dp "docker pull"
 abbr -a dr "docker run"
 abbr -a dri "docker run -it"
 abbr -a ef "$EDITOR ~/.config/fish"
-abbr -a emise "$EDITOR ~/.config/mise"
+abbr -a emise "chezmoi edit ~/.config/mise/config.toml"
 abbr -a g gcloud
 abbr -a ga "git aa"
 abbr -a gaa "git aa"
@@ -104,6 +104,7 @@ abbr -a lics "cd $LICS"
 abbr -a ls "eza --icons=always --hyperlink --git --git-repos --group-directories-first -O"
 abbr -a m minikube
 abbr -a mp mprocs
+abbr -a mu multipass
 abbr -a n nerdctl
 abbr -a nas "command ssh nas"
 abbr -a o doctl

@@ -88,6 +88,9 @@ set -gx PATH $PATH /Users/dave/.lmstudio/bin
 complete -c gcloud -f -a '(__fish_argcomplete_complete gcloud)'
 complete -c gsutil -f -a '(__fish_argcomplete_complete gsutil)'
 
+# tide prompt
+set -gx tide_right_prompt_items status vi_mode private_mode os jobs shlvl status cmd_duration context jobs direnv node python rustc java php pulumi ruby go aws gcloud kubectl distrobox toolbox terraform nix_shell crystal elixir zig time
+
 # monokai theme
 set fish_color_normal F8F8F2 # the default color
 set fish_color_command F92672 # the color for commands
