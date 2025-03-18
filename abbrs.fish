@@ -124,11 +124,12 @@ abbr -a s skaffold
 abbr -a sbrse "sudo brew services"
 abbr -a sf "subl ~/.config/fish"
 abbr -a sw switcher
-abbr -a t tlm
+abbr -a t terraform
 abbr -a task notion-task
 abbr -a task-dev "ruby -Ilib ./bin/notion-task"
 abbr -a tdl "tidal-dl -l"
 abbr -a te "tlm explain"
+abbr -a tf terraform
 abbr -a tilde "command ssh tilde"
 abbr -a ts "tlm suggest"
 abbr -a v vue

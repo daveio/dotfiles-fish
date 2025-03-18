@@ -5,7 +5,7 @@ set fish_greeting
 source $HOME/.iterm2_shell_integration.fish
 
 # mise
-# mise activate fish | source
+mise activate fish | source
 
 # zoxide
 zoxide init fish | source
