@@ -108,7 +108,7 @@ abbr -a n nerdctl
 abbr -a nas "command ssh nas"
 abbr -a o doctl
 abbr -a oco "oco --fgm"
-abbr -a p poetry
+abbr -a p pulumi
 abbr -a pf "open -a 'Path Finder'"
 abbr -a ping gping
 abbr -a pio platformio
@@ -119,7 +119,7 @@ abbr -a pni "pnpm install"
 abbr -a pnr "pnpm run"
 abbr -a pnx "pnpm dlx"
 abbr -a pping "prettyping --nolegend"
-abbr -a pr "poetry run"
+abbr -a pu "pulumi up"
 abbr -a s skaffold
 abbr -a sbrse "sudo brew services"
 abbr -a sf "subl ~/.config/fish"
