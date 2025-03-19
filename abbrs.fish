@@ -133,6 +133,7 @@ abbr -a te "tlm explain"
 abbr -a tf terraform
 abbr -a tilde "command ssh tilde"
 abbr -a ts "tlm suggest"
+abbr -a u upctl
 abbr -a v vue
 abbr -a venv "python -m venv"
 abbr -a vi nvim

@@ -9,3 +9,6 @@ if status is-interactive
     source $HOME/.config/fish/interactive.fish
 end
 
+
+# Added by Windsurf
+fish_add_path /Users/dave/.codeium/windsurf/bin
