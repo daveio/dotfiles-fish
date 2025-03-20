@@ -125,7 +125,7 @@ abbr -a s skaffold
 abbr -a sbrse "sudo brew services"
 abbr -a sf "subl ~/.config/fish"
 abbr -a sw switcher
-abbr -a t terraform
+abbr -a t trunk
 abbr -a task notion-task
 abbr -a task-dev "ruby -Ilib ./bin/notion-task"
 abbr -a tdl "tidal-dl -l"
