@@ -1,6 +1,9 @@
 # disable greeting message
 set fish_greeting
 
+# Aqua
+aqua completion fish | source
+
 # iTerm2
 source $HOME/.iterm2_shell_integration.fish
 

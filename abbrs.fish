@@ -109,6 +109,7 @@ abbr -a n nerdctl
 abbr -a nas "command ssh nas"
 abbr -a o doctl
 abbr -a oco "oco --fgm"
+abbr -a p "git add -A .; oco --fgm"
 abbr -a pf "open -a 'Path Finder'"
 abbr -a ping gping
 abbr -a pio platformio

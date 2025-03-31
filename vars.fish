@@ -1,3 +1,4 @@
+# set -gx AQUA_GLOBAL_CONFIG $HOME/.config/aqua/config.yaml
 set -gx DISABLE_ZELLIJ true
 set -gx EDITOR "code -w"
 set -gx GHC_GITHUB_USER daveio

@@ -1,5 +1,5 @@
 function nas-docker
-    set -gx DOCKER_HOST tcp://7t54.myqnapcloud.com:2376
+    set -gx DOCKER_HOST tcp://nas-7t54.manticore-minor.ts.net:2376
     set -gx DOCKER_TLS_VERIFY 1
 end
 
