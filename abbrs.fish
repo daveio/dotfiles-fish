@@ -87,6 +87,7 @@ abbr -a g gcloud
 abbr -a ga "git aa"
 abbr -a gaa "git aa"
 abbr -a gcam "git cam"
+abbr -a genderbase "cd $HOME/src/github.com/daveio/genderbase"
 abbr -a gl glooctl
 abbr -a gp "git p"
 abbr -a gpum "git p -u origin main"
