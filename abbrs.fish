@@ -100,6 +100,7 @@ abbr -a kn1 "ssh -p212 dave@10.23.23.100"
 abbr -a kn1j "ssh -J dave@10.0.101.10:212 dave@10.23.23.100"
 abbr -a kpf "kubectl port-forward"
 abbr -a l linkerd
+abbr -a --set-cursor lc "curl http://$TAILSCALE_IPV4:3000/%"
 abbr -a lics "cd $LICS"
 abbr -a ls "eza --icons=always --hyperlink --git --git-repos --group-directories-first -O"
 abbr -a m minikube
@@ -108,8 +109,8 @@ abbr -a mu multipass
 abbr -a n nerdctl
 abbr -a nas "command ssh nas"
 abbr -a o doctl
-abbr -a oco "oco --fgm"
-abbr -a p "git add -A .; oco --fgm"
+abbr -a oco "oco --fgm --yes"
+abbr -a p "git add -A .; oco --fgm --yes"
 abbr -a pf "open -a 'Path Finder'"
 abbr -a ping gping
 abbr -a pio platformio

@@ -89,3 +89,13 @@ function yank-all
         cd ..
     end
 end
+
+function queue-prs
+    for i in *
+        cd $i
+        gh pr list | awk '{print $1}' | while read line
+            trunk merge $line
+        end
+        cd ..
+    end
+end
