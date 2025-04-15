@@ -3,7 +3,10 @@ set -gx DISABLE_ZELLIJ true
 set -gx EDITOR "code -w"
 set -gx GHC_GITHUB_USER daveio
 set -gx GHC_ROOT /Users/dave/src
+set -gx GITHUB_AUTH_TOKEN $GITHUB_TOKEN
+set -gx GITHUB_PERSONAL_ACCESS_TOKEN $GITHUB_TOKEN
 set -gx MONO_GAC_PREFIX /opt/homebrew
+set -gx OLLAMA_HOST "http://localhost:11434"
 set -gx OP_PLUGIN_ALIASES_SOURCED 1
 set -gx SERVERLESS_FRAMEWORK_FORCE_UPDATE true
 set -gx SHOW_ITERM2_WARNING false
