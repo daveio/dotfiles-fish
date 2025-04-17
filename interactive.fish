@@ -94,6 +94,9 @@ upctl completion fish | source
 complete -c gcloud -f -a '(__fish_argcomplete_complete gcloud)'
 complete -c gsutil -f -a '(__fish_argcomplete_complete gsutil)'
 
+# navi
+navi widget fish | source
+
 # monokai theme
 set fish_color_command F92672 # the color for commands
 set fish_color_comment 75715E # the color used for code comments
