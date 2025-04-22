@@ -99,3 +99,9 @@ function queue-prs
         cd ..
     end
 end
+
+function queue-local-prs
+    gh pr list | awk '{print $1}' | while read line
+        trunk merge $line
+    end
+end
