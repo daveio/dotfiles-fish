@@ -155,3 +155,36 @@ function delete-issues
         echo (set_color yellow)"There may be more issues remaining. Run the command again to continue."(set_color normal)
     end
 end
+
+function mise-install
+    if not brew list pkgconf > /dev/null 2>&1
+        brew install pkgconf
+    end
+    set -l pkg_config_path /opt/homebrew/opt/ncurses/lib/pkgconfig /opt/homebrew/opt/readline/lib/pkgconfig /opt/homebrew/opt/protobuf@29/lib/pkgconfig /opt/homebrew/opt/libarchive/lib/pkgconfig /opt/homebrew/opt/sqlite/lib/pkgconfig /opt/homebrew/opt/zlib/lib/pkgconfig /opt/homebrew/opt/curl/lib/pkgconfig /opt/homebrew/opt/krb5/lib/pkgconfig /opt/homebrew/opt/libpq/lib/pkgconfig /opt/homebrew/opt/icu4c@76/lib/pkgconfig /opt/homebrew/opt/ruby/lib/pkgconfig /opt/homebrew/opt/icu4c@77/lib/pkgconfig
+    set -lx ACLOCAL_PATH /opt/homebrew/share/aclocal
+    set -lx CC clang
+    set -lx CMAKE_PREFIX_PATH /opt/homebrew
+    set -lx CXX clang++
+    set -lx GOTOOLCHAIN local
+    set -lx HIDAPI_SYSTEM_HIDAPI 1
+    set -lx LANG en_GB.UTF-8
+    set -lx LC_ALL en_GB.UTF-8
+    set -lx MAKEFLAGS -j16
+    set -lx OBJC clang
+    set -lx OBJCXX clang++
+    set -lx OPENSSL_NO_VENDOR 1
+    set -lx PYZMQ_NO_BUNDLE 1
+    set -lx SODIUM_INSTALL system
+    set -lx ZERO_AR_DATE 1
+    set -lxa CMAKE_INCLUDE_PATH /Library/Developer/CommandLineTools/SDKs/MacOSX15.sdk/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers
+    set -lxa CMAKE_LIBRARY_PATH /Library/Developer/CommandLineTools/SDKs/MacOSX15.sdk/System/Library/Frameworks/OpenGL.framework/Versions/Current/Libraries
+    set -lxa CPPFLAGS (pkg-config liblzma --cflags) (pkg-config tk --cflags)
+    set -lxa LDFLAGS (pkg-config liblzma --libs) (pkg-config tk --libs)
+    set -lxa PKG_CONFIG_LIBDIR /usr/lib/pkgconfig /opt/homebrew/Library/Homebrew/os/mac/pkgconfig/15
+    set -lxa PKG_CONFIG_PATH $pkg_config_path
+    while true
+        mise install --yes
+        echo "Installation run finished! CTRL+C to exit, or we'll start over in 5 seconds..."
+        sleep 5
+    end
+end
