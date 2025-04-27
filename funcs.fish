@@ -107,3 +107,51 @@ function queue-local-prs
         trunk merge $line
     end
 end
+
+function delete-issue
+    set -l issue_number $argv[1]
+    set -l issue_title $argv[2]
+
+    if test -n "$issue_title"
+        echo -n (set_color yellow)"Deleting "(set_color cyan)"$issue_number"(set_color normal)": $issue_title ... "
+    else
+        echo -n (set_color yellow)"Deleting issue "(set_color cyan)"$issue_number"(set_color normal)" ... "
+    end
+    gh issue delete --yes $issue_number
+    echo (set_color green)"✓"(set_color normal)
+end
+
+function delete-issues
+    set -l parallelism 8
+    if test (count $argv) -gt 0
+        set parallelism $argv[1]
+    end
+
+    echo "Fetching all issues..."
+
+    # Use a single call with a high limit to get all issues
+    # Adding the --state all flag to include all issue states (open, closed)
+    set -l all_issues (gh issue list --json number,title --limit 1000 --state all)
+
+    # Check if the result is empty or not a valid JSON array
+    if test -z "$all_issues" || test (echo $all_issues | jq 'if type == "array" then length else 0 end') -eq 0
+        echo "No issues found to delete."
+        return 0
+    end
+
+    set -l issues_found (echo $all_issues | jq 'length')
+    echo "Found $issues_found issues to delete."
+
+    echo "Processing $issues_found issues with parallelism $parallelism..."
+
+    echo $all_issues | jq -r '.[] | "\(.number)\t\(.title)"' \
+        | parallel -P $parallelism --colsep '\t' 'delete-issue {1} "{2}"'
+
+    echo (set_color green)"Completed deleting all $issues_found issues"(set_color normal)
+
+    # Check if there are more issues (in case we hit the limit)
+    set -l remaining (gh issue list --json number --limit 1 --state all | jq 'length')
+    if test $remaining -gt 0
+        echo (set_color yellow)"There may be more issues remaining. Run the command again to continue."(set_color normal)
+    end
+end
