@@ -162,48 +162,8 @@ function mise-install
             brew install $i
         end
     end
-    # set -l addl_pkg_config_path /opt/homebrew/opt/ncurses/lib/pkgconfig /opt/homebrew/opt/readline/lib/pkgconfig /opt/homebrew/opt/protobuf@29/lib/pkgconfig /opt/homebrew/opt/libarchive/lib/pkgconfig /opt/homebrew/opt/sqlite/lib/pkgconfig /opt/homebrew/opt/zlib/lib/pkgconfig /opt/homebrew/opt/curl/lib/pkgconfig /opt/homebrew/opt/krb5/lib/pkgconfig /opt/homebrew/opt/libpq/lib/pkgconfig /opt/homebrew/opt/icu4c@76/lib/pkgconfig /opt/homebrew/opt/ruby/lib/pkgconfig /opt/homebrew/opt/icu4c@77/lib/pkgconfig
-    set -l cflags_saved $CFLAGS
-    set -l cppflags_saved $CPPFLAGS
-    set -l ldflags_saved $LDFLAGS
-    # set -lx CC clang
-    # set -lx CMAKE_PREFIX_PATH /opt/homebrew
-    # set -lx CXX clang++
-    # set -lx GOTOOLCHAIN local
-    # set -lx HIDAPI_SYSTEM_HIDAPI 1
-    # set -lx LANG en_GB.UTF-8
-    # set -lx LC_ALL en_GB.UTF-8
-    # set -lx MAKEFLAGS -j16
-    # set -lx OBJC clang
-    # set -lx OBJCXX clang++
-    # set -lx OPENSSL_NO_VENDOR 1
-    # set -lx PYZMQ_NO_BUNDLE 1
-    # set -lx SODIUM_INSTALL system
-    # set -lx ZERO_AR_DATE 1
-    # set -lxa ACLOCAL_PATH /opt/homebrew/share/aclocal
-    # set -lxa CMAKE_INCLUDE_PATH /Library/Developer/CommandLineTools/SDKs/MacOSX15.sdk/System/Library/Frameworks/OpenGL.framework/Versions/Current/Headers
-    # set -lxa CMAKE_LIBRARY_PATH /Library/Developer/CommandLineTools/SDKs/MacOSX15.sdk/System/Library/Frameworks/OpenGL.framework/Versions/Current/Libraries
-    # for lib in libdeflate liblzma libpcre2-posix tk
-    #     set -gxa CFLAGS (pkg-config $lib --cflags)
-    #     set -gxa CPPFLAGS (pkg-config $lib --cflags)
-    #     set -gxa LDFLAGS (pkg-config $lib --libs)
-    # end
-    set -gxp CFLAGS -I/opt/homebrew/include
-    set -gxp CPPFLAGS -I/opt/homebrew/include
-    set -gxp LDFLAGS -L/opt/homebrew/lib
-    # for i in gettext
-    #     set -l this_prefix (brew --prefix $i)
-    #     set -gxa CPPFLAGS "-I$this_prefix/include"
-    #     set -gxa LDFLAGS "-L$this_prefix/lib"
-    # end
-    # set -lxa PKG_CONFIG_LIBDIR /usr/lib/pkgconfig /opt/homebrew/Library/Homebrew/os/mac/pkgconfig/15
-    # set -lxa PKG_CONFIG_PATH $addl_pkg_config_path
-    while true
-        mise install --yes
-        echo "Installation run finished! CTRL+C to exit, or we'll start over in 5 seconds..."
-        sleep 5
-    end
-    set -gx CFLAGS $cflags_saved
-    set -gx CPPFLAGS $cppflags_saved
-    set -gx LDFLAGS $ldflags_saved
+    set -lxp CFLAGS -I/opt/homebrew/include
+    set -lxp CPPFLAGS -I/opt/homebrew/include
+    set -lxp LDFLAGS -L/opt/homebrew/lib
+    mise install --yes
 end
