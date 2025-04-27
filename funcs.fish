@@ -156,14 +156,32 @@ function delete-issues
     end
 end
 
-function mise-install
+function mise-deps
     for i in gettext libdeflate pcre2 pkgconf tcl-tk xz
         if not brew list $i > /dev/null 2>&1
             brew install $i
         end
     end
+end
+
+function mise-install
+    set -l flags -O3 -mcpu=apple-m4
+    mise-deps
     set -lxp CFLAGS -I/opt/homebrew/include
+    set -lxa CFLAGS $flags
     set -lxp CPPFLAGS -I/opt/homebrew/include
+    set -lxa CPPFLAGS $flags
     set -lxp LDFLAGS -L/opt/homebrew/lib
-    mise install --yes
+    mise install --yes $argv
+end
+
+function mise-upgrade
+    set -l flags -O3 -mcpu=apple-m4
+    mise-deps
+    set -lxp CFLAGS -I/opt/homebrew/include
+    set -lxa CFLAGS $flags
+    set -lxp CPPFLAGS -I/opt/homebrew/include
+    set -lxa CPPFLAGS $flags
+    set -lxp LDFLAGS -L/opt/homebrew/lib
+    mise upgrade --yes $argv
 end
