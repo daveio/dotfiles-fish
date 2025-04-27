@@ -78,15 +78,17 @@ function wipe-workflows -d "Wipe all workflow runs for a GitHub repository"
 end
 
 function yank-all
-    for i in *
-        echo "$i"
-        cd $i
-        echo fetch
-        git fetch --all --tags --prune --jobs=8 --recurse-submodules=yes
-        echo pull
-        git pull --stat --tags --prune --jobs=8 --recurse-submodules=yes
-        echo out
-        cd ..
+    for dir in *
+        if test -d "$dir/.git"
+            printf "%30s" "$dir  📡  "
+            pushd $dir
+            echo -n "[🚚 fetch] "
+            git fetch --quiet --all --tags --prune --jobs=8 --recurse-submodules=yes
+            echo -n "[🚜 pull] "
+            git pull --quiet --stat --tags --prune --jobs=8 --recurse-submodules=yes
+            popd
+            echo
+        end
     end
 end
 
