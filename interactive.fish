@@ -83,9 +83,6 @@ end
 # warp
 # printf '\eP$f{"hook": "SourcedRcFileForWarp", "value": { "shell": "fish" }}\x9c'
 
-# Added by LM Studio CLI (lms)
-set -gx PATH $PATH /Users/dave/.lmstudio/bin
-
 # upcloud upctl
 upctl completion fish | source
 
@@ -96,6 +93,12 @@ complete -c gsutil -f -a '(__fish_argcomplete_complete gsutil)'
 
 # navi
 navi widget fish | source
+
+# Windsurf
+fish_add_path /Users/dave/.codeium/windsurf/bin
+
+# LM Studio
+fish_add_path /Users/dave/.lmstudio/bin
 
 # monokai theme
 set fish_color_command F92672 # the color for commands
