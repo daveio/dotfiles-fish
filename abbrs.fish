@@ -88,6 +88,7 @@ abbr -a ga "git aa"
 abbr -a gaa "git aa"
 abbr -a gcam "git cam"
 abbr -a genderbase "cd $HOME/src/github.com/daveio/genderbase"
+abbr -a gfci "-c core.editor='fast-conventional editor' commit"
 abbr -a gl glooctl
 abbr -a gp "git p"
 abbr -a gpum "git p -u origin main"
