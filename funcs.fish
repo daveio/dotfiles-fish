@@ -1,13 +1,13 @@
-function nas-docker
+function nas-docker -d "Set up Docker to use the NAS"
     set -gx DOCKER_HOST tcp://nas-7t54.manticore-minor.ts.net:2376
     set -gx DOCKER_TLS_VERIFY 1
 end
 
-function le-fw
+function le-fw -d "Set up certs for the firewall"
     lego -d fw.lan.sl1p.net -d fw.mgmt.lan.sl1p.net -d fw.private.lan.sl1p.net -d fw.guest.lan.sl1p.net -d fw.iot.lan.sl1p.net -d fw.fastlane.lan.sl1p.net -d fw.public.lan.sl1p.net -d private.external.lan.sl1p.net -d fastlane.external.lan.sl1p.net -d public.external.lan.sl1p.net -a --email dave@dave.io -k ec384 --dns dnsimple --dns.resolvers ns1.dnsimple.com --pem --pfx run
 end
 
-function fzf --wraps="fzf"
+function fzf --wraps="fzf" -d "Set up fzf"
     set -Ux FZF_DEFAULT_OPTS "
 	--color=fg:#908caa,bg:#191724,hl:#ebbcba
 	--color=fg+:#e0def4,bg+:#26233a,hl+:#ebbcba
@@ -18,25 +18,25 @@ function fzf --wraps="fzf"
     command fzf
 end
 
-function globals
+function globals -d "Set up global packages which mise has trouble with"
     gem install rubygems-server
 end
 
-function cma
+function cma -d "Add a file to chezmoi"
     chmod a-x $argv
     chezmoi add $argv
 end
 
-function cmae
+function cmae -d "Add a file to chezmoi and encrypt it"
     chmod a-x $argv
     chezmoi add --encrypt $argv
 end
 
-function github-auth
+function github-auth -d "Authenticate with GitHub and set env var"
     set -gx GITHUB_TOKEN (gh auth token)
 end
 
-function kill-oco
+function kill-oco -d "Kill a hanging opencommit"
     echo "Searching for Node.js processes containing 'oco'..."
     set pids (ps aux | grep -i "[n]odejs.*oco\|[n]ode.*oco" | awk '{print $2}')
     if test (count $pids) -eq 0
@@ -53,8 +53,6 @@ function kill-oco
         for pid in $pids
             echo "Killing process $pid..."
             kill -9 $pid
-
-            # Check if process was successfully killed
             if kill -0 $pid 2>/dev/null
                 echo "Failed to kill process $pid!"
             else
@@ -77,7 +75,7 @@ function wipe-workflows -d "Wipe all workflow runs for a GitHub repository"
     end
 end
 
-function yank-all
+function yank-all -d "Fetch and pull all git repositories in the current directory"
     for dir in *
         if test -d "$dir/.git"
             printf "%30s" "$dir  📡  "
@@ -92,7 +90,7 @@ function yank-all
     end
 end
 
-function queue-prs
+function queue-prs -d "Queue pull requests for all git repositories in the current directory with Trunk.io"
     for i in *
         cd $i
         gh pr list | awk '{print $1}' | while read line
@@ -102,16 +100,15 @@ function queue-prs
     end
 end
 
-function queue-local-prs
+function queue-local-prs -d "Queue pull requests for the current repository with Trunk.io"
     gh pr list | awk '{print $1}' | while read line
         trunk merge $line
     end
 end
 
-function delete-issue
+function delete-issue -d "Delete a GitHub issue from the current repository"
     set -l issue_number $argv[1]
     set -l issue_title $argv[2]
-
     if test -n "$issue_title"
         echo -n (set_color yellow)"Deleting "(set_color cyan)"$issue_number"(set_color normal)": $issue_title ... "
     else
@@ -121,42 +118,30 @@ function delete-issue
     echo (set_color green)"✓"(set_color normal)
 end
 
-function delete-issues
+function delete-issues -d "Delete all GitHub issues for the current repository"
     set -l parallelism 8
     if test (count $argv) -gt 0
         set parallelism $argv[1]
     end
-
     echo "Fetching all issues..."
-
-    # Use a single call with a high limit to get all issues
-    # Adding the --state all flag to include all issue states (open, closed)
     set -l all_issues (gh issue list --json number,title --limit 1000 --state all)
-
-    # Check if the result is empty or not a valid JSON array
     if test -z "$all_issues" || test (echo $all_issues | jq 'if type == "array" then length else 0 end') -eq 0
         echo "No issues found to delete."
         return 0
     end
-
     set -l issues_found (echo $all_issues | jq 'length')
     echo "Found $issues_found issues to delete."
-
     echo "Processing $issues_found issues with parallelism $parallelism..."
-
     echo $all_issues | jq -r '.[] | "\(.number)\t\(.title)"' \
         | parallel -P $parallelism --colsep '\t' 'delete-issue {1} "{2}"'
-
     echo (set_color green)"Completed deleting all $issues_found issues"(set_color normal)
-
-    # Check if there are more issues (in case we hit the limit)
     set -l remaining (gh issue list --json number --limit 1 --state all | jq 'length')
     if test $remaining -gt 0
         echo (set_color yellow)"There may be more issues remaining. Run the command again to continue."(set_color normal)
     end
 end
 
-function mw --wraps mise -a command args --description "Run mise ensuring dependencies and flags"
+function mw --wraps mise -a command args -d "Run mise ensuring dependencies and flags"
     for i in gettext libdeflate pcre2 pkgconf tcl-tk xz
         if not brew list $i >/dev/null 2>&1
             brew install $i
