@@ -80,6 +80,9 @@ if [ -n "$HTTP_TOOLKIT_ACTIVE" ]
 end
 # --httptoolkit-end--
 
+# fuck
+thefuck --alias | source
+
 # warp
 # printf '\eP$f{"hook": "SourcedRcFileForWarp", "value": { "shell": "fish" }}\x9c'
 
