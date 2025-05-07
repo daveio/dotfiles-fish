@@ -8,6 +8,7 @@ set -gx GITHUB_PERSONAL_ACCESS_TOKEN $GITHUB_TOKEN
 set -gx MONO_GAC_PREFIX /opt/homebrew
 set -gx OLLAMA_HOST "http://localhost:11434"
 set -gx OP_PLUGIN_ALIASES_SOURCED 1
+set -gx PYTHON_BUILD_FREE_THREADING 1
 set -gx SERVERLESS_FRAMEWORK_FORCE_UPDATE true
 set -gx SHOW_ITERM2_WARNING false
 set -gx TAILSCALE_IPV4 (/opt/homebrew/bin/tailscale ip -4)
