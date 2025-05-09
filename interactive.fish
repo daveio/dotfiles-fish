@@ -10,6 +10,9 @@ source $HOME/.iterm2_shell_integration.fish
 # mise
 mise activate fish | source
 
+# starship
+starship init fish | source -
+
 # zoxide
 zoxide init fish | source
 
