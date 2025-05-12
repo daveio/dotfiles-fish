@@ -125,6 +125,7 @@ abbr -a pnd "pnpm dev"
 abbr -a pni "pnpm install"
 abbr -a pnr "pnpm run"
 abbr -a pnx "pnpm dlx"
+abbr -a pp "git add -A .; oco --fgm --yes; push"
 abbr -a pping "prettyping --nolegend"
 abbr -a pu pulumi
 abbr -a s skaffold
