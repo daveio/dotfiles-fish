@@ -105,9 +105,10 @@ abbr -a l linkerd
 abbr -a --set-cursor lc "curl http://$TAILSCALE_IPV4:3000/%"
 abbr -a lics "cd $LICS"
 abbr -a ls "eza --icons=always --hyperlink --git --git-repos --group-directories-first -O"
-abbr -a m minikube
+abbr -a m mise
 abbr -a ma "open -a Marked"
 abbr -a marked "open -a Marked"
+abbr -a mk minikube
 abbr -a mp mprocs
 abbr -a mu multipass
 abbr -a n nerdctl
