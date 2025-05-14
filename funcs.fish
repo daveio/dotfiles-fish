@@ -141,3 +141,18 @@ function mw --wraps mise -a command args -d "Run mise ensuring dependencies and 
         mise $command $args
     end
 end
+
+function yank-all -d "Fetch and pull all git repositories in the current directory"
+    for dir in *
+        if test -d "$dir/.git"
+            printf "%30s" "$dir  📡  "
+            pushd $dir
+            echo -n "[🚚 fetch] "
+            git fetch --quiet --all --tags --prune --jobs=8 --recurse-submodules=yes
+            echo -n "[🚜 pull] "
+            git pull --quiet --stat --tags --prune --jobs=8 --recurse-submodules=yes
+            popd
+            echo
+        end
+    end
+end
