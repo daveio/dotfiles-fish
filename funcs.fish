@@ -158,8 +158,13 @@ function mw --wraps mise -a command args -d "Run mise ensuring dependencies and 
 end
 
 function mwu -d "Upgrade mise packages when mise upgrade is broken"
-    tail -n +60 ~/.config/mise/config.toml | grep -v '^#' | grep -v "node =" | awk '/^['\''"]?[a-zA-Z]/ {sub(/=.*$/,"",$0); gsub(/^["\x27]|["\x27]$/,"",$0); print $0}' | tr -d "'" | string trim -r | while read -l tool
-        mise upgrade "$tool@latest"
-    end
-    mise upgrade node@lts
+    set config_file ~/.config/mise/config.toml
+    set skip_lines 60
+
+    tail -n +$skip_lines $config_file |
+        awk '!/^#/ && !/node =/ && /^['\''"]?[a-zA-Z]/ {sub(/=.*$/,""); gsub(/^["\x27]|["\x27]$/,""); gsub(/'\''/, ""); print}' | string trim -r |
+        while read -l tool
+            mise upgrade "$tool@latest"
+        end
+    mise upgrade "node@lts"
 end
