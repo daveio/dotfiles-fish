@@ -6,17 +6,16 @@ Pretty UI with rich progress display.
 
 import argparse
 import concurrent.futures
+import importlib.util
+import math
 import os
+import signal
 import subprocess
 import sys
 import time
-import math
-import importlib.util
-import signal
 from enum import Enum
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
-
 
 
 def handle_rich_install_error(error_prefix, exception):
@@ -24,6 +23,7 @@ def handle_rich_install_error(error_prefix, exception):
     print(f"{error_prefix}{exception}")
     print("Please install rich manually with: pip install rich")
     sys.exit(1)
+
 
 def ensure_rich_installed():
     """Check if rich is installed, and install it if not."""
@@ -35,9 +35,9 @@ def ensure_rich_installed():
         subprocess.check_call([sys.executable, "-m", "pip", "install", "rich"])
         print("Rich successfully installed.")
     except subprocess.CalledProcessError as e:
-        handle_rich_install_error('Error installing rich: ', e)
+        handle_rich_install_error("Error installing rich: ", e)
     except Exception as e:
-        handle_rich_install_error('Unexpected error installing rich: ', e)
+        handle_rich_install_error("Unexpected error installing rich: ", e)
 
     # Force reload modules to make the newly installed rich available
     if "rich" in sys.modules:
@@ -49,14 +49,16 @@ def ensure_rich_installed():
 # Ensure rich is installed before attempting to import it
 ensure_rich_installed()
 
+from rich import box
+from rich.columns import Columns
+
 # Now import rich modules
 from rich.console import Console
 from rich.live import Live
 from rich.panel import Panel
 from rich.table import Table
 from rich.text import Text
-from rich.columns import Columns
-from rich import box
+
 
 # Status enums
 class Status(Enum):
@@ -66,12 +68,13 @@ class Status(Enum):
     DONE = "done"
     ERROR = "error"
 
+
 # Status colors
 STATUS_STYLES = {
     Status.WAITING: "blue",
     Status.FETCHING: "yellow",
     Status.PULLING: "magenta",  # Changed from green to magenta
-    Status.DONE: "green",      # Changed from magenta to green
+    Status.DONE: "green",  # Changed from magenta to green
     Status.ERROR: "red",
 }
 
@@ -84,8 +87,10 @@ STATUS_NAMES = {
     Status.ERROR: "Error",
 }
 
+
 class GitRepo:
     """Represents a git repository with status tracking"""
+
     def __init__(self, path: Path):
         self.path = path.absolute()  # Store absolute path
         self.name = path.name
@@ -115,8 +120,10 @@ class GitRepo:
         # Create the text object with appropriate color
         return Text(f"{self.name}", style=color)
 
+
 class GitRepoManager:
     """Manages multiple git repositories with parallel operations"""
+
     def __init__(self, max_workers: int = 8, use_grid: bool = True):
         self.console = Console()
         self.repos: List[GitRepo] = []
@@ -151,11 +158,7 @@ class GitRepoManager:
             name = STATUS_NAMES[status]
             table.add_row(Text("■", style=color), Text(name))
 
-        return Panel(
-            table,
-            title="[bold]Color Key[/bold]",
-            border_style="dim"
-        )
+        return Panel(table, title="[bold]Color Key[/bold]", border_style="dim")
 
     def _make_grid_view(self) -> Panel:
         """Create a grid view of repositories"""
@@ -175,9 +178,9 @@ class GitRepoManager:
         # Create columns with the correct parameter name
         columns = Columns(
             renderables,
-            equal=True,           # Equal width columns
-            expand=True,          # Expand to fill available width
-            padding=(0, 2)        # Add horizontal padding between columns
+            equal=True,  # Equal width columns
+            expand=True,  # Expand to fill available width
+            padding=(0, 2),  # Add horizontal padding between columns
         )
 
         # Count status types
@@ -206,7 +209,7 @@ class GitRepoManager:
         return Panel(
             columns,
             title="[bold blue]Git Repository Updates[/bold blue]",
-            subtitle=f"[italic]{status_text}[/italic]"
+            subtitle=f"[italic]{status_text}[/italic]",
         )
 
     def _make_color_key(self) -> Panel:
@@ -259,9 +262,7 @@ class GitRepoManager:
 
             # Add the row to the table with the repo name colored by its status
             table.add_row(
-                Text(f"{repo.name}", style=STATUS_STYLES[status]),
-                status_text,
-                details
+                Text(f"{repo.name}", style=STATUS_STYLES[status]), status_text, details
             )
 
         return Panel(
@@ -291,11 +292,7 @@ class GitRepoManager:
         """Run a git command and handle results and errors consistently"""
         try:
             result = subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                check=True,
-                cwd=str(repo.path)
+                cmd, capture_output=True, text=True, check=True, cwd=str(repo.path)
             )
             if result.stdout.strip():
                 repo.output_message = result.stdout.strip()
@@ -327,16 +324,32 @@ class GitRepoManager:
 
             # Fetch
             repo.fetch_status = Status.FETCHING
-            fetch_cmd = ["git", "fetch", "--quiet", "--all", "--tags", "--prune",
-                        "--jobs=8", "--recurse-submodules=yes"]
+            fetch_cmd = [
+                "git",
+                "fetch",
+                "--quiet",
+                "--all",
+                "--tags",
+                "--prune",
+                "--jobs=8",
+                "--recurse-submodules=yes",
+            ]
             if not self._run_git_command(repo, fetch_cmd, "Fetch"):
                 return
             repo.fetch_status = Status.DONE
 
             # Pull
             repo.pull_status = Status.PULLING
-            pull_cmd = ["git", "pull", "--quiet", "--tags", "--prune",
-                       "--jobs=8", "--recurse-submodules=yes", "--rebase"]
+            pull_cmd = [
+                "git",
+                "pull",
+                "--quiet",
+                "--tags",
+                "--prune",
+                "--jobs=8",
+                "--recurse-submodules=yes",
+                "--rebase",
+            ]
             if self._run_git_command(repo, pull_cmd, "Pull"):
                 repo.pull_status = Status.DONE
                 repo.status = Status.DONE
@@ -349,11 +362,15 @@ class GitRepoManager:
     def run(self) -> None:
         """Run updates on all repositories in parallel"""
         if not self.repos:
-            self.console.print("[yellow]No git repositories found in the current directory.[/yellow]")
+            self.console.print(
+                "[yellow]No git repositories found in the current directory.[/yellow]"
+            )
             return
 
         # Print initial information
-        self.console.print(f"[bold blue]Found {len(self.repos)} repositories[/bold blue]")
+        self.console.print(
+            f"[bold blue]Found {len(self.repos)} repositories[/bold blue]"
+        )
         self.console.print(f"[cyan]Using {self.max_workers} worker threads[/cyan]")
 
         # Set up signal handler for graceful termination
@@ -362,9 +379,13 @@ class GitRepoManager:
         def handle_sigint(sig, frame):
             """Handle Ctrl+C by terminating subprocesses and exiting gracefully"""
             if self.executor:
-                self.console.print("\n[bold yellow]Terminating... Please wait for subprocesses to clean up[/bold yellow]")
+                self.console.print(
+                    "\n[bold yellow]Terminating... Please wait for subprocesses to clean up[/bold yellow]"
+                )
                 self.executor.shutdown(wait=False, cancel_futures=True)
-            signal.signal(signal.SIGINT, original_sigint_handler)  # Restore original handler
+            signal.signal(
+                signal.SIGINT, original_sigint_handler
+            )  # Restore original handler
             sys.exit(0)
 
         signal.signal(signal.SIGINT, handle_sigint)
@@ -390,7 +411,9 @@ class GitRepoManager:
         try:
             with Live(get_display(), refresh_per_second=1) as live:
                 # Process repos in parallel
-                with concurrent.futures.ThreadPoolExecutor(max_workers=self.max_workers) as executor:
+                with concurrent.futures.ThreadPoolExecutor(
+                    max_workers=self.max_workers
+                ) as executor:
                     self.executor = executor
                     # Start all tasks
                     future_to_repo = {
@@ -413,7 +436,9 @@ class GitRepoManager:
                     self.executor = None
         except KeyboardInterrupt:
             # Handle Ctrl+C gracefully
-            self.console.print("\n[bold yellow]Operation canceled by user[/bold yellow]")
+            self.console.print(
+                "\n[bold yellow]Operation canceled by user[/bold yellow]"
+            )
             return
         finally:
             # Restore original signal handler
@@ -423,23 +448,27 @@ class GitRepoManager:
         success_count = sum(1 for repo in self.repos if repo.status == Status.DONE)
         error_count = sum(1 for repo in self.repos if repo.status == Status.ERROR)
 
-        self.console.print(f"\n[bold green]{success_count} repositories updated successfully[/bold green]")
+        self.console.print(
+            f"\n[bold green]{success_count} repositories updated successfully[/bold green]"
+        )
         if error_count:
-            self.console.print(f"[bold red]{error_count} repositories had errors[/bold red]")
+            self.console.print(
+                f"[bold red]{error_count} repositories had errors[/bold red]"
+            )
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Update all git repositories in the current directory")
+    parser = argparse.ArgumentParser(
+        description="Update all git repositories in the current directory"
+    )
     parser.add_argument(
         "threads",
         nargs="?",
         default="8",
-        help="Number of threads to use (default: 8, use 'unlimited' for one thread per repo)"
+        help="Number of threads to use (default: 8, use 'unlimited' for one thread per repo)",
     )
     parser.add_argument(
-        "--table",
-        action="store_true",
-        help="Force table view instead of grid view"
+        "--table", action="store_true", help="Force table view instead of grid view"
     )
     args = parser.parse_args()
 
