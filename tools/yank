@@ -124,7 +124,7 @@ class GitRepo:
 class GitRepoManager:
     """Manages multiple git repositories with parallel operations"""
 
-    def __init__(self, max_workers: int = 8, use_grid: bool = True):
+    def __init__(self, max_workers: int = 4, use_grid: bool = True):
         self.console = Console()
         self.repos: List[GitRepo] = []
         self.max_workers = max_workers
@@ -331,7 +331,6 @@ class GitRepoManager:
                 "--all",
                 "--tags",
                 "--prune",
-                "--jobs=8",
                 "--recurse-submodules=yes",
             ]
             if not self._run_git_command(repo, fetch_cmd, "Fetch"):
@@ -346,7 +345,6 @@ class GitRepoManager:
                 "--quiet",
                 "--tags",
                 "--prune",
-                "--jobs=8",
                 "--recurse-submodules=yes",
                 "--rebase",
             ]
@@ -464,8 +462,8 @@ def main():
     parser.add_argument(
         "threads",
         nargs="?",
-        default="8",
-        help="Number of threads to use (default: 8, use 'unlimited' for one thread per repo)",
+        default="4",
+        help="Number of threads to use (default: 4, use 'unlimited' for one thread per repo)",
     )
     parser.add_argument(
         "--table", action="store_true", help="Force table view instead of grid view"
