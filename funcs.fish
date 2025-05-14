@@ -161,5 +161,5 @@ function mwu -d "Upgrade mise packages when mise upgrade is broken"
     tail -n +60 ~/.config/mise/config.toml | grep -v '^#' | grep -v "node =" | awk '/^['\''"]?[a-zA-Z]/ {sub(/=.*$/,"",$0); gsub(/^["\x27]|["\x27]$/,"",$0); print $0}' | tr -d "'" | string trim -r | while read -l tool
         mise upgrade "$tool@latest"
     end
-    mise upgrade node@22
+    mise upgrade node@lts
 end
