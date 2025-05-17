@@ -156,3 +156,11 @@ function yank-all -d "Fetch and pull all git repositories in the current directo
         end
     end
 end
+
+function clear-js-caches -d "Clear all JavaScript caches"
+    rm -rf ~/.bun
+    rm -rf ~/.npm
+    rm -rf ~/Library/pnpm
+    rm -rf ~/Library/Caches/deno
+    deno clean
+end
