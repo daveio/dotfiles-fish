@@ -164,3 +164,15 @@ function clear-js-caches -d "Clear all JavaScript caches"
     rm -rf ~/Library/Caches/deno
     deno clean
 end
+
+function czkawka -d "Run czkawka or krokiet"
+    read -l -P "Run krokiet instead of czkawka? [y/N] " use_krokiet
+    set -l use_krokiet (string lower "$use_krokiet")
+    set -l cmd
+    if test "$use_krokiet" = "y" -o "$use_krokiet" = "yes"
+        set cmd "/Users/dave/.local/bin/krokiet"
+    else
+        set cmd "/Users/dave/.local/bin/czkawka"
+    end
+    eval $cmd $argv
+end
