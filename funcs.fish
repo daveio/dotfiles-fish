@@ -176,3 +176,25 @@ function czkawka -d "Run czkawka or krokiet"
     end
     eval $cmd $argv
 end
+
+function list-tools -d "List mise tools not modified in the last day"
+    pushd ~/.local/share/mise/installs
+    argparse "c/core" "e/eco=" -- $argv or return
+    set -l dirs (find . -maxdepth 1 -type d -mtime +0 -not -name ".*" | cut -c3-)
+    for dir in $dirs
+        set -l length (string length $dir)
+        if set -q _flag_core
+            if not string match -q "*-*" $dir
+                echo "$length $dir"
+            end
+        else if set -q _flag_eco
+            set -l eco (string match -r "^[^-]+" $dir)
+            if test "$eco" = "$_flag_eco"
+                echo "$length $dir"
+            end
+        else
+            echo "$length $dir"
+        end
+    end | sort -n | cut -d" " -f2-
+    popd
+end
