@@ -128,6 +128,7 @@ abbr -a pnx "pnpm dlx"
 abbr -a pp "git add -A .; oco --fgm --yes; push"
 abbr -a pping "prettyping --nolegend"
 abbr -a pu pulumi
+abbr -a rmq 'xattr -d com.apple.quarantine'
 abbr -a s skaffold
 abbr -a sbrse "sudo brew services"
 abbr -a sf "subl ~/.config/fish"
