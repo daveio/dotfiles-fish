@@ -198,3 +198,8 @@ function list-tools -d "List mise tools not modified in the last day"
     end | sort -n | cut -d" " -f2-
     popd
 end
+
+function latest-commit -d "Get the latest commit hash on main for a GitHub repository"
+    set -l repo $argv[1]
+    gh api "repos/$repo/commits/main" --jq .sha
+end
