@@ -169,7 +169,7 @@ function czkawka -d "Run czkawka or krokiet"
     read -l -P "Run krokiet instead of czkawka? [y/N] " use_krokiet
     set -l use_krokiet (string lower "$use_krokiet")
     set -l cmd
-    if test "$use_krokiet" = "y" -o "$use_krokiet" = "yes"
+    if test "$use_krokiet" = y -o "$use_krokiet" = yes
         set cmd "/Users/dave/.local/bin/krokiet"
     else
         set cmd "/Users/dave/.local/bin/czkawka"
@@ -179,7 +179,7 @@ end
 
 function list-tools -d "List mise tools not modified in the last day"
     pushd ~/.local/share/mise/installs
-    argparse "c/core" "e/eco=" -- $argv or return
+    argparse c/core "e/eco=" -- $argv or return
     set -l dirs (find . -maxdepth 1 -type d -mtime +0 -not -name ".*" | cut -c3-)
     for dir in $dirs
         set -l length (string length $dir)
@@ -202,4 +202,65 @@ end
 function latest-commit -d "Get the latest commit hash on main for a GitHub repository"
     set -l repo $argv[1]
     gh api "repos/$repo/commits/main" --jq .sha
+end
+
+function dependamerge -d "Consolidate Dependabot PRs"
+    echo "🤖 Checking for Dependabot branches..."
+    # Configure Graphite trunk and sync with main first
+    git fetch --all --tags --prune --recurse-submodules=yes
+    gt init --trunk main
+    gt checkout main
+    gt sync
+    # Check for dependabot branches
+    set dependabot_branches (git branch -r | grep 'origin/dependabot' | sed 's/^[[:space:]]*origin\\///')
+    if test -z "$dependabot_branches"
+        echo "✨ No dependabot branches found!"
+        return 0
+    end
+    echo "📦 Found branches:"
+    for branch in $dependabot_branches
+        echo "  - $branch"
+    end
+    # Create consolidation branch
+    gt create -m "📦 Dependabot updates"
+    # Merge each branch (this handles conflicts better than cherry-pick)
+    for branch in $dependabot_branches
+        echo "🔀 Merging $branch..."
+        if git merge origin/$branch --no-edit
+            echo "✅ Successfully merged $branch"
+        else
+            echo "⚠️  Conflict in $branch - auto-resolving..."
+            # Check if we have unmerged files
+            set unmerged_files (git status --porcelain | grep "^UU" | awk '{print $2}')
+            if test -n "$unmerged_files"
+                for file in $unmerged_files
+                    echo "  📝 Resolving conflict in $file"
+                    if string match -q "*lock*" $file; or string match -q "package*.json" $file
+                        # For lock files and package.json, take the incoming version (theirs)
+                        git checkout --theirs $file
+                        git add $file
+                    else
+                        # For other files, you might want different logic
+                        echo "  ⚠️  Manual resolution needed for $file"
+                        git checkout --theirs $file
+                        git add $file
+                    end
+                end
+                # Commit the resolved merge
+                if git commit --no-edit
+                    echo "✅ Resolved and merged $branch"
+                else
+                    echo "❌ Failed to commit resolved merge for $branch"
+                    return 1
+                end
+            else
+                echo "❌ Merge failed for $branch but no unmerged files found"
+                return 1
+            end
+        end
+    end
+    echo "✅ All changes consolidated!"
+    echo "📝 Submitting PR..."
+    gt submit -p --ai
+    git checkout main
 end
