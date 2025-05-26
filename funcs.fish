@@ -212,7 +212,7 @@ function dependamerge -d "Merge all open Dependabot PRs"
     echo "Found "(count $pr_numbers)" open PRs. Beginning merge process..."
     for pr in $pr_numbers
         echo "Merging PR #$pr..."
-        gh pr merge $pr --admin --merge --body "dependmerge" --subject "dependamerge"
+        gh pr merge $pr --admin --merge
     end
     echo "Pruning deleted remote branches..."
     git fetch --all --tags --prune --recurse-submodules=yes
