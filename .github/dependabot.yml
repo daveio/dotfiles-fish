@@ -7,3 +7,7 @@ updates:
     open-pull-requests-limit: 100
     assignees:
       - daveio
+    groups:
+      all-dependencies:
+        patterns:
+          - "*"
