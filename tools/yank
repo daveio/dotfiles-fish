@@ -139,7 +139,7 @@ class GitRepoManager:
     PULL_CMD = [
         "git",
         "pull",
-        "--quiet"
+        "--quiet",
         "--all",
         "--prune",
         "--rebase",
