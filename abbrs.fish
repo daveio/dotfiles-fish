@@ -83,6 +83,7 @@ abbr -a dr "docker run"
 abbr -a dri "docker run -it"
 abbr -a ef "$EDITOR ~/.config/fish"
 abbr -a emise "chezmoi edit ~/.config/mise/config.toml"
+abbr -a fp "git fetch --all --prune --tags --prune-tags --recurse-submodules=yes && git pull --all --prune"
 abbr -a g gcloud
 abbr -a ga "git aa"
 abbr -a gaa "git aa"
