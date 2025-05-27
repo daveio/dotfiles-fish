@@ -153,6 +153,8 @@ class GitRepoManager:
         # Store the original directory
         self.original_dir = Path.cwd().absolute()
         self.executor = None
+        # Flag to control display updates
+        self.should_update_display = True
         self._scan_repos()
 
     def _collect_error_logs(self) -> List[Tuple[str, str]]:
@@ -186,130 +188,99 @@ class GitRepoManager:
         # Sort repos by name for consistent display
         self.repos.sort(key=lambda x: x.name)
 
-    def _make_status_key(self) -> Panel:
-        """Create a color key panel to explain the colors"""
-        table = Table(box=None, show_header=False, padding=(0, 1, 0, 1))
-        table.add_column("Color", style="bold")
-        table.add_column("Meaning")
+    def _render_repo_grid(self) -> Panel:
+        """Create a grid of repositories with their status colors"""
+        renderables = []
 
-        for status in Status:
-            color = STATUS_STYLES[status]
-            name = STATUS_NAMES[status]
-            table.add_row(Text("■", style=color), Text(name))
+        for repo in self.repos:
+            # Determine the overall status color
+            if repo.error_message:
+                color = STATUS_STYLES[Status.ERROR]
+            elif repo.status == Status.DONE:
+                color = STATUS_STYLES[Status.DONE]
+            elif repo.pull_status == Status.PULLING:
+                color = STATUS_STYLES[Status.PULLING]
+            elif repo.fetch_status == Status.FETCHING:
+                color = STATUS_STYLES[Status.FETCHING]
+            else:
+                color = STATUS_STYLES[Status.WAITING]
 
-        return Panel(table, title="[bold]Color Key[/bold]", border_style="dim")
+            # Create the text object with appropriate color
+            renderables.append(Text(f"{repo.name}", style=color))
 
-    def _make_grid_view(self) -> Panel:
-        """Create a grid view of repositories"""
-        renderables = [repo.get_status_renderable() for repo in self.repos]
-
-        # Calculate appropriate number of columns based on terminal width
+        # Calculate columns based on terminal width
         terminal_width = self.console.width
-
-        # Calculate estimated item width based on actual repo names
         max_name_length = max((len(repo.name) for repo in self.repos), default=15)
         estimated_item_width = max_name_length + 6  # Add padding
-
-        # Calculate columns to fit terminal with some margin
-        available_width = terminal_width - 10  # Leave some margin
+        available_width = terminal_width - 10
         num_columns = max(1, min(4, available_width // estimated_item_width))
 
-        # Create columns with the correct parameter name
+        # Create columns
         columns = Columns(
             renderables,
-            equal=True,  # Equal width columns
-            expand=True,  # Expand to fill available width
-            padding=(0, 2),  # Add horizontal padding between columns
+            equal=True,
+            expand=True,
+            padding=(0, 2),
         )
 
-        # Count status types
+        # Create status counts
         waiting = sum(1 for repo in self.repos if repo.status == Status.WAITING)
         fetching = sum(1 for repo in self.repos if repo.fetch_status == Status.FETCHING)
         pulling = sum(1 for repo in self.repos if repo.pull_status == Status.PULLING)
         done = sum(1 for repo in self.repos if repo.status == Status.DONE)
         error = sum(1 for repo in self.repos if repo.status == Status.ERROR)
 
-        # Create status summary
-        status_text = f"Total: {len(self.repos)} | "
+        # Build status text
+        status_parts = []
+        status_parts.append(f"Total: {len(self.repos)}")
         if waiting > 0:
-            status_text += f"Starting: {waiting} | "
+            status_parts.append(f"Starting: {waiting}")
         if fetching > 0:
-            status_text += f"Fetching: {fetching} | "
+            status_parts.append(f"Fetching: {fetching}")
         if pulling > 0:
-            status_text += f"Pulling: {pulling} | "
+            status_parts.append(f"Pulling: {pulling}")
         if done > 0:
-            status_text += f"Completed: {done} | "
+            status_parts.append(f"Completed: {done}")
         if error > 0:
-            status_text += f"Error: {error}"
+            status_parts.append(f"Error: {error}")
 
-        # Remove trailing separator if needed
-        status_text = status_text.rstrip(" | ")
+        status_text = " | ".join(status_parts)
 
         return Panel(
             columns,
             title="[bold blue]Git Repository Updates[/bold blue]",
             subtitle=f"[italic]{status_text}[/italic]",
+            border_style="blue",
         )
 
-    def _make_color_key(self) -> Panel:
-        """Create a color key table"""
+    def _render_color_key(self) -> Panel:
+        """Create a simple color key panel"""
         table = Table(box=None, show_header=False, padding=(0, 2), expand=True)
 
-        # Add color columns
+        # Add status columns
         for status in Status:
             table.add_column(style=f"bold {STATUS_STYLES[status]}", justify="center")
 
-        # Add status name row
+        # Add status names
         table.add_row(*[STATUS_NAMES[status] for status in Status])
 
-        # Wrap in a panel to match style of main display
-        return Panel(
-            table,
-            border_style="dim",
-            expand=True,
-        )
+        return Panel(table, border_style="dim", expand=True)
 
-    def _make_status_table(self) -> Panel:
-        """Create a rich table with repository status"""
-        table = Table(box=box.ROUNDED, expand=True)
-        table.add_column("Repository", style="bold white")
-        table.add_column("Status", justify="center")
-        table.add_column("Details", style="dim")
+    def _display_progress(self) -> None:
+        """Display the current progress without using Live context"""
+        if not self.should_update_display:
+            return
 
-        for repo in self.repos:
-            # Determine which status to show
-            if repo.error_message:
-                status = Status.ERROR
-                status_text = Text("Error", style=STATUS_STYLES[status])
-                details = Text(f"{repo.error_message}", style="red")
-            elif repo.status == Status.DONE:
-                status = Status.DONE
-                status_text = Text("Completed", style=STATUS_STYLES[status])
-                details = Text(repo.output_message if repo.output_message else "")
-            elif repo.pull_status == Status.PULLING:
-                status = Status.PULLING
-                status_text = Text("Pulling", style=STATUS_STYLES[status])
-                details = Text("")
-            elif repo.fetch_status == Status.FETCHING:
-                status = Status.FETCHING
-                status_text = Text("Fetching", style=STATUS_STYLES[status])
-                details = Text("")
-            else:
-                status = Status.WAITING
-                status_text = Text("Starting", style=STATUS_STYLES[status])
-                details = Text("")
+        # Clear the console (but keep scrollback)
+        self.console.clear()
 
-            # Add the row to the table with the repo name colored by its status
-            table.add_row(
-                Text(f"{repo.name}", style=STATUS_STYLES[status]), status_text, details
-            )
+        # Create and render panels
+        repo_grid = self._render_repo_grid()
+        color_key = self._render_color_key()
 
-        return Panel(
-            table,
-            title="[bold blue]Git Repository Updates[/bold blue]",
-            subtitle=f"[italic]{len(self.repos)} repositories[/italic]",
-            expand=True,
-        )
+        # Display panels
+        self.console.print(repo_grid)
+        self.console.print(color_key)
 
     def _set_repo_error(self, repo: GitRepo, error_msg: str, context: str = "") -> None:
         """Set error status on a repository with proper logging"""
@@ -403,6 +374,9 @@ class GitRepoManager:
 
         def handle_sigint(sig, frame):
             """Handle Ctrl+C by terminating subprocesses and exiting gracefully"""
+            # Stop updating the display to prevent visual clutter during shutdown
+            self.should_update_display = False
+
             if self.executor:
                 self.console.print(
                     "\n[bold yellow]Terminating... Please wait for subprocesses to clean up[/bold yellow]"
@@ -419,81 +393,65 @@ class GitRepoManager:
 
         signal.signal(signal.SIGINT, handle_sigint)
 
-        # Function to get the appropriate display with color key
-        def get_display():
-            # Only use grid for many repos or when explicitly requested
-            if self.use_grid or len(self.repos) > 15:
-                main_display = self._make_grid_view()
-            else:
-                main_display = self._make_status_table()
+        # Create background thread for updating the display
+        def display_updater():
+            """Thread function to update the display at regular intervals"""
+            update_interval = 2  # Update every 2 seconds
+            while self.should_update_display:
+                try:
+                    self._display_progress()
+                except Exception as e:
+                    # If display fails, log error but continue
+                    print(f"Display error: {e}")
+                time.sleep(update_interval)
 
-            color_key = self._make_color_key()
-
-            # Combine main display with color key
-            table = Table.grid(padding=0)
-            table.add_column(justify="center")
-            table.add_row(main_display)
-            table.add_row(color_key)
-            return table
-
-        # Set up live display
+        # Start the display thread
+        display_thread = None
         try:
-            # Create the initial display before any updates
-            initial_display = get_display()
+            # Start display update thread
+            import threading
+            self.should_update_display = True
+            display_thread = threading.Thread(target=display_updater, daemon=True)
+            display_thread.start()
 
-            with Live(initial_display, refresh_per_second=4) as live:
-                # Process repos in parallel
-                with concurrent.futures.ThreadPoolExecutor(
-                    max_workers=self.max_workers
-                ) as executor:
-                    self.executor = executor
-                    # Start all tasks
-                    future_to_repo = {
-                        executor.submit(self._process_repo, repo): repo
-                        for repo in self.repos
-                    }
+            # Process repos in parallel
+            with concurrent.futures.ThreadPoolExecutor(max_workers=self.max_workers) as executor:
+                self.executor = executor
+                # Submit all tasks
+                futures = [executor.submit(self._process_repo, repo) for repo in self.repos]
 
-                    # We'll now update the display less frequently to avoid rendering issues
-                    # and batch multiple updates together
-                    last_update_time = time.time()
-                    update_interval = 0.5  # Update at most every 0.5 seconds
-
-                    # Update display as tasks complete
-                    for future in concurrent.futures.as_completed(future_to_repo):
-                        repo = future_to_repo[future]
-                        try:
-                            future.result()  # This will propagate any exceptions
-                        except Exception as e:
-                            repo.status = Status.ERROR
-                            repo.error_message = f"Unexpected error: {str(e)}"
-
-                        # Only update the display periodically rather than for every repo change
-                        current_time = time.time()
-                        if current_time - last_update_time >= update_interval:
-                            try:
-                                live.update(get_display())
-                                last_update_time = current_time
-                            except Exception as display_error:
-                                # If display update fails, log it but continue processing
-                                print(f"Display update error: {display_error}")
-
-                    # Final display update
+                # Wait for all tasks to complete
+                for future in concurrent.futures.as_completed(futures):
                     try:
-                        live.update(get_display())
-                    except Exception as final_display_error:
-                        print(f"Final display update error: {final_display_error}")
+                        future.result()  # Get result to propagate exceptions
+                    except Exception as e:
+                        # Log any unexpected exceptions
+                        print(f"Unexpected error: {e}")
 
-                    self.executor = None
+                self.executor = None
+
+            # Wait for display thread to show final status
+            time.sleep(0.5)
+
         except KeyboardInterrupt:
             # Handle Ctrl+C gracefully
-            self.console.print(
-                "\n[bold yellow]Operation canceled by user[/bold yellow]"
-            )
-            # Print error summary before returning
+            self.console.print("\n[bold yellow]Operation canceled by user[/bold yellow]")
             self._print_error_summary()
             return
+
         finally:
-            # Restore original signal handler
+            # Clean up
+            self.should_update_display = False
+            if display_thread and display_thread.is_alive():
+                display_thread.join(timeout=1.0)
+
+            # Show final display once more
+            try:
+                self._display_progress()
+            except Exception:
+                pass
+
+            # Restore signal handler
             signal.signal(signal.SIGINT, original_sigint_handler)
 
         # Final statistics
