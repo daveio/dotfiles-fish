@@ -158,9 +158,11 @@ class GitRepoManager:
     def _collect_error_logs(self) -> List[Tuple[str, str]]:
         """Collect all error messages with repo names"""
         error_logs = []
-        for repo in self.repos:
-            if repo.status == Status.ERROR and repo.error_message:
-                error_logs.append((repo.name, repo.error_message))
+        error_logs.extend(
+            (repo.name, repo.error_message)
+            for repo in self.repos
+            if repo.status == Status.ERROR and repo.error_message
+        )
         return error_logs
 
     def _print_error_summary(self) -> None:
@@ -436,7 +438,10 @@ class GitRepoManager:
 
         # Set up live display
         try:
-            with Live(get_display(), refresh_per_second=1) as live:
+            # Create the initial display before any updates
+            initial_display = get_display()
+
+            with Live(initial_display, refresh_per_second=4) as live:
                 # Process repos in parallel
                 with concurrent.futures.ThreadPoolExecutor(
                     max_workers=self.max_workers
@@ -448,8 +453,10 @@ class GitRepoManager:
                         for repo in self.repos
                     }
 
-                    # Track which repos have been updated in the display
-                    updated_repos = set()
+                    # We'll now update the display less frequently to avoid rendering issues
+                    # and batch multiple updates together
+                    last_update_time = time.time()
+                    update_interval = 0.5  # Update at most every 0.5 seconds
 
                     # Update display as tasks complete
                     for future in concurrent.futures.as_completed(future_to_repo):
@@ -460,12 +467,21 @@ class GitRepoManager:
                             repo.status = Status.ERROR
                             repo.error_message = f"Unexpected error: {str(e)}"
 
-                        # Only update display for repos that haven't errored before
-                        if repo.name not in updated_repos:
-                            live.update(get_display())
-                            # Add to set of updated repos if error
-                            if repo.status == Status.ERROR:
-                                updated_repos.add(repo.name)
+                        # Only update the display periodically rather than for every repo change
+                        current_time = time.time()
+                        if current_time - last_update_time >= update_interval:
+                            try:
+                                live.update(get_display())
+                                last_update_time = current_time
+                            except Exception as display_error:
+                                # If display update fails, log it but continue processing
+                                print(f"Display update error: {display_error}")
+
+                    # Final display update
+                    try:
+                        live.update(get_display())
+                    except Exception as final_display_error:
+                        print(f"Final display update error: {final_display_error}")
 
                     self.executor = None
         except KeyboardInterrupt:
