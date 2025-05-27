@@ -132,7 +132,7 @@ class GitRepoManager:
         "--all",
         "--prune",
         "--tags",
-        "--tags",
+        "--prune-tags",
         "--recurse-submodules=yes",
     ]
 
