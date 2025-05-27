@@ -3,9 +3,6 @@ set -gx ANTHROPIC_MODEL claude-sonnet-4-20250514
 set -gx ANTHROPIC_SMALL_FAST_MODEL claude-sonnet-4-20250514
 set -gx DISABLE_ZELLIJ true
 set -gx EDITOR "code -w"
-set -gx GHC_GITHUB_USER daveio
-set -gx GHC_ROOT /Users/dave/src
-set -gx GITHUB_TOKEN (gh auth token)
 set -gx HOMEBREW_BUNDLE_DUMP_NO_VSCODE 1
 set -gx MONO_GAC_PREFIX /opt/homebrew
 set -gx OLLAMA_HOST "http://localhost:11434"
