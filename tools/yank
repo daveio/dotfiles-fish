@@ -329,8 +329,9 @@ class GitRepoManager:
                 "fetch",
                 "--quiet",
                 "--all",
-                "--tags",
                 "--prune",
+                "--tags",
+                "--tags",
                 "--recurse-submodules=yes",
             ]
             if not self._run_git_command(repo, fetch_cmd, "Fetch"):
@@ -342,10 +343,9 @@ class GitRepoManager:
             pull_cmd = [
                 "git",
                 "pull",
-                "--quiet",
-                "--tags",
+                "--quiet"
+                "--all",
                 "--prune",
-                "--recurse-submodules=yes",
                 "--rebase",
             ]
             if self._run_git_command(repo, pull_cmd, "Pull"):
