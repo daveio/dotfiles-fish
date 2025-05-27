@@ -124,6 +124,27 @@ class GitRepo:
 class GitRepoManager:
     """Manages multiple git repositories with parallel operations"""
 
+    # Define git commands at class level
+    FETCH_CMD = [
+        "git",
+        "fetch",
+        "--quiet",
+        "--all",
+        "--prune",
+        "--tags",
+        "--tags",
+        "--recurse-submodules=yes",
+    ]
+
+    PULL_CMD = [
+        "git",
+        "pull",
+        "--quiet"
+        "--all",
+        "--prune",
+        "--rebase",
+    ]
+
     def __init__(self, max_workers: int = 4, use_grid: bool = True):
         self.console = Console()
         self.repos: List[GitRepo] = []
@@ -324,31 +345,13 @@ class GitRepoManager:
 
             # Fetch
             repo.fetch_status = Status.FETCHING
-            fetch_cmd = [
-                "git",
-                "fetch",
-                "--quiet",
-                "--all",
-                "--prune",
-                "--tags",
-                "--tags",
-                "--recurse-submodules=yes",
-            ]
-            if not self._run_git_command(repo, fetch_cmd, "Fetch"):
+            if not self._run_git_command(repo, self.FETCH_CMD, "Fetch"):
                 return
             repo.fetch_status = Status.DONE
 
             # Pull
             repo.pull_status = Status.PULLING
-            pull_cmd = [
-                "git",
-                "pull",
-                "--quiet"
-                "--all",
-                "--prune",
-                "--rebase",
-            ]
-            if self._run_git_command(repo, pull_cmd, "Pull"):
+            if self._run_git_command(repo, self.PULL_CMD, "Pull"):
                 repo.pull_status = Status.DONE
                 repo.status = Status.DONE
 
@@ -370,6 +373,12 @@ class GitRepoManager:
             f"[bold blue]Found {len(self.repos)} repositories[/bold blue]"
         )
         self.console.print(f"[cyan]Using {self.max_workers} worker threads[/cyan]")
+
+        # Print git commands that will be run
+        fetch_cmd_str = " ".join(self.FETCH_CMD)
+        pull_cmd_str = " ".join(self.PULL_CMD)
+        self.console.print(f"[cyan]FETCH: [bold]{fetch_cmd_str}[/bold][/cyan]")
+        self.console.print(f"[cyan] PULL: [bold]{pull_cmd_str}[/bold][/cyan]")
 
         # Set up signal handler for graceful termination
         original_sigint_handler = signal.getsignal(signal.SIGINT)
