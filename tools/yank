@@ -155,6 +155,22 @@ class GitRepoManager:
         self.executor = None
         self._scan_repos()
 
+    def _collect_error_logs(self) -> List[Tuple[str, str]]:
+        """Collect all error messages with repo names"""
+        error_logs = []
+        for repo in self.repos:
+            if repo.status == Status.ERROR and repo.error_message:
+                error_logs.append((repo.name, repo.error_message))
+        return error_logs
+
+    def _print_error_summary(self) -> None:
+        """Print a summary of all errors at the end"""
+        error_logs = self._collect_error_logs()
+        if error_logs:
+            self.console.print("\n[bold red]Error Details:[/bold red]")
+            for repo_name, error_msg in error_logs:
+                self.console.print(f"[bold red]{repo_name}:[/bold red] {error_msg}")
+
     def _scan_repos(self) -> None:
         """Find all git repositories in the current directory"""
         for item in Path(".").iterdir():
@@ -390,6 +406,10 @@ class GitRepoManager:
                     "\n[bold yellow]Terminating... Please wait for subprocesses to clean up[/bold yellow]"
                 )
                 self.executor.shutdown(wait=False, cancel_futures=True)
+
+            # Print error summary before exiting
+            self._print_error_summary()
+
             signal.signal(
                 signal.SIGINT, original_sigint_handler
             )  # Restore original handler
@@ -428,6 +448,9 @@ class GitRepoManager:
                         for repo in self.repos
                     }
 
+                    # Track which repos have been updated in the display
+                    updated_repos = set()
+
                     # Update display as tasks complete
                     for future in concurrent.futures.as_completed(future_to_repo):
                         repo = future_to_repo[future]
@@ -437,8 +460,12 @@ class GitRepoManager:
                             repo.status = Status.ERROR
                             repo.error_message = f"Unexpected error: {str(e)}"
 
-                        # Update the live display
-                        live.update(get_display())
+                        # Only update display for repos that haven't errored before
+                        if repo.name not in updated_repos:
+                            live.update(get_display())
+                            # Add to set of updated repos if error
+                            if repo.status == Status.ERROR:
+                                updated_repos.add(repo.name)
 
                     self.executor = None
         except KeyboardInterrupt:
@@ -446,6 +473,8 @@ class GitRepoManager:
             self.console.print(
                 "\n[bold yellow]Operation canceled by user[/bold yellow]"
             )
+            # Print error summary before returning
+            self._print_error_summary()
             return
         finally:
             # Restore original signal handler
@@ -462,6 +491,9 @@ class GitRepoManager:
             self.console.print(
                 f"[bold red]{error_count} repositories had errors[/bold red]"
             )
+
+        # Print error details at the end
+        self._print_error_summary()
 
 
 def main():
