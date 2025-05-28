@@ -131,7 +131,7 @@ function yank-all -d "Fetch and pull all git repositories in the current directo
             printf "%30s" "$dir  📡  "
             pushd $dir
             echo -n "[🚚 fetch] "
-            git git fetch --quiet --all --prune --tags --prune-tags --recurse-submodules=yes
+            git fetch --quiet --all --prune --tags --prune-tags --recurse-submodules=yes
             echo -n "[🚜 pull] "
             git pull --quiet --all --prune --rebase
             popd
