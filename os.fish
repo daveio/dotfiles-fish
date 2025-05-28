@@ -28,8 +28,6 @@
             alias node=node
         end
     end
-    fish_add_path /Users/dave/.codeium/windsurf/bin
-    fish_add_path /Users/dave/.lmstudio/bin
     if test -d (brew --prefix)"/share/fish/completions"
         set -p fish_complete_path (brew --prefix)/share/fish/completions
     end

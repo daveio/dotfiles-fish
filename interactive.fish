@@ -62,9 +62,14 @@ thefuck --alias | source
 upctl completion fish | source
 
 # gcloud
-# source /Users/dave/.asdf/installs/gcloud/511.0.0/path.fish.inc
 complete -c gcloud -f -a '(__fish_argcomplete_complete gcloud)'
 complete -c gsutil -f -a '(__fish_argcomplete_complete gsutil)'
 
 # navi
 navi widget fish | source
+
+# windsurf
+fish_add_path $HOME/.codeium/windsurf/bin
+
+# lmstudio
+fish_add_path $HOME/.lmstudio/bin
