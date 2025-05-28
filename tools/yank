@@ -410,15 +410,20 @@ class GitRepoManager:
         try:
             # Start display update thread
             import threading
+
             self.should_update_display = True
             display_thread = threading.Thread(target=display_updater, daemon=True)
             display_thread.start()
 
             # Process repos in parallel
-            with concurrent.futures.ThreadPoolExecutor(max_workers=self.max_workers) as executor:
+            with concurrent.futures.ThreadPoolExecutor(
+                max_workers=self.max_workers
+            ) as executor:
                 self.executor = executor
                 # Submit all tasks
-                futures = [executor.submit(self._process_repo, repo) for repo in self.repos]
+                futures = [
+                    executor.submit(self._process_repo, repo) for repo in self.repos
+                ]
 
                 # Wait for all tasks to complete
                 for future in concurrent.futures.as_completed(futures):
@@ -435,7 +440,9 @@ class GitRepoManager:
 
         except KeyboardInterrupt:
             # Handle Ctrl+C gracefully
-            self.console.print("\n[bold yellow]Operation canceled by user[/bold yellow]")
+            self.console.print(
+                "\n[bold yellow]Operation canceled by user[/bold yellow]"
+            )
             self._print_error_summary()
             return
 

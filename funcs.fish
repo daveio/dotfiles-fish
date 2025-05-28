@@ -125,23 +125,6 @@ function delete-issues -d "Delete all GitHub issues for the current repository"
     end
 end
 
-function mw --wraps mise -a command args -d "Run mise ensuring dependencies and flags"
-    for i in gettext libdeflate pcre2 pkgconf tcl-tk xz
-        if not brew list $i >/dev/null 2>&1
-            brew install $i
-        end
-    end
-    set -l flags -O3 -mcpu=apple-m4
-    set -lxp CFLAGS -I/opt/homebrew/include $flags
-    set -lxp CPPFLAGS -I/opt/homebrew/include $flags
-    set -lxp LDFLAGS -L/opt/homebrew/lib
-    if test "$command" = install -o "$command" = upgrade
-        mise $command --yes $args
-    else
-        mise $command $args
-    end
-end
-
 function yank-all -d "Fetch and pull all git repositories in the current directory"
     for dir in *
         if test -d "$dir/.git"
