@@ -1,12 +1,12 @@
-abbr -a 7z "7zz"
+abbr -a 7z 7zz
 abbr -a a2 "aria2c -x8 -s8"
-abbr -a b "baselime"
+abbr -a b baselime
 abbr -a ba "bundle add"
 abbr -a bad "bundle add --group development"
 abbr -a be "bundle exec"
 abbr -a belt "poetry -C /Users/dave/src/github.com/daveio/belt run belt"
 abbr -a bi "bundle init"
-abbr -a br "brew"
+abbr -a br brew
 abbr -a brana "brew analytics"
 abbr -a brcat "brew cat"
 abbr -a brcle "brew cleanup"
@@ -61,22 +61,23 @@ abbr -a brupg "brew upgrade"
 abbr -a brupi "brew unpin"
 abbr -a bruse "brew uses"
 abbr -a bruta "brew untap"
-abbr -a c "code"
-abbr -a cm "chezmoi"
+abbr -a c code
+abbr -a cm chezmoi
 abbr -a cmad "chezmoi add"
 abbr -a cmade "chezmoi add --encrypt"
 abbr -a cmap "chezmoi apply"
 abbr -a cme "chezmoi edit"
 abbr -a cmef "chezmoi edit ~/.config/fish/config.fish"
 abbr -a cs 'codesign --force --sign "Developer ID Application: David Williams"'
-abbr -a d "docker"
+abbr -a curls "curl --proto-default https"
+abbr -a d docker
 abbr -a daveio "cd $HOME/src/github.com/daveio"
-abbr -a dc "docker-compose"
+abbr -a dc docker-compose
 abbr -a dcd "docker compose down"
 abbr -a dcu "docker compose up"
 abbr -a de "docker exec"
 abbr -a dei "docker exec -it"
-abbr -a dev "devcontainer"
+abbr -a dev devcontainer
 abbr -a dp "docker pull"
 abbr -a dr "docker run"
 abbr -a dri "docker run -it"
@@ -89,37 +90,37 @@ abbr -a gaa "git aa"
 abbr -a gcam "git cam"
 abbr -a genderbase "cd $HOME/src/github.com/daveio/genderbase"
 abbr -a gfci "git -c core.editor='fast-conventional editor' commit"
-abbr -a gl "glooctl"
+abbr -a gl glooctl
 abbr -a gp "git p"
 abbr -a gpum "git p -u origin main"
 abbr -a gpums "git p -u origin master"
-abbr -a h "helm"
-abbr -a k "kubectl"
+abbr -a h helm
+abbr -a k kubectl
 abbr -a ka "kubectl apply"
 abbr -a kg "kubectl get"
 abbr -a kgp "kubectl get pod"
 abbr -a kn1 "ssh -p212 dave@10.23.23.100"
 abbr -a kn1j "ssh -J dave@10.0.101.10:212 dave@10.23.23.100"
 abbr -a kpf "kubectl port-forward"
-abbr -a l "linkerd"
+abbr -a l linkerd
 abbr -a --set-cursor lc "curl http://$TAILSCALE_IPV4:3000/%"
 abbr -a lics "cd $LICS"
 abbr -a ls "eza --icons=always --hyperlink --git --git-repos --group-directories-first -O"
-abbr -a m "mise"
+abbr -a m mise
 abbr -a ma "open -a Marked"
 abbr -a marked "open -a Marked"
-abbr -a mk "minikube"
-abbr -a mp "mprocs"
-abbr -a mu "multipass"
-abbr -a n "nerdctl"
+abbr -a mk minikube
+abbr -a mp mprocs
+abbr -a mu multipass
+abbr -a n nerdctl
 abbr -a nas "command ssh nas"
-abbr -a o "doctl"
+abbr -a o doctl
 abbr -a oco "oco --fgm --yes"
 abbr -a p "git add -A .; oco --fgm --yes"
 abbr -a pf "open -a 'Path Finder'"
-abbr -a ping "gping"
-abbr -a pio "platformio"
-abbr -a pn "pnpm"
+abbr -a ping gping
+abbr -a pio platformio
+abbr -a pn pnpm
 abbr -a pna "pnpm add"
 abbr -a pnd "pnpm dev"
 abbr -a pni "pnpm install"
@@ -127,26 +128,26 @@ abbr -a pnr "pnpm run"
 abbr -a pnx "pnpm dlx"
 abbr -a pp "git add -A .; oco --fgm --yes; push"
 abbr -a pping "prettyping --nolegend"
-abbr -a pu "pulumi"
+abbr -a pu pulumi
 abbr -a rmq "xattr -d com.apple.quarantine"
-abbr -a s "skaffold"
+abbr -a s skaffold
 abbr -a sbrse "sudo brew services"
 abbr -a sf "subl ~/.config/fish"
-abbr -a sw "switcher"
-abbr -a t "trunk"
-abbr -a task "notion-task"
+abbr -a sw switcher
+abbr -a t trunk
+abbr -a task notion-task
 abbr -a task-dev "ruby -Ilib ./bin/notion-task"
 abbr -a tdl "tidal-dl -l"
 abbr -a te "tlm explain"
-abbr -a tf "terraform"
+abbr -a tf terraform
 abbr -a tilde "command ssh tilde"
 abbr -a ts "tlm suggest"
-abbr -a u "upctl"
-abbr -a v "vue"
+abbr -a u upctl
+abbr -a v vue
 abbr -a venv "python -m venv"
-abbr -a vi "nvim"
-abbr -a vim "nvim"
+abbr -a vi hx
+abbr -a vim hx
 abbr -a vue "pnpm run vue"
-abbr -a w "wrangler"
+abbr -a w wrangler
 abbr -a y "yt-dlp --cookies-from-browser firefox --remux-video mp4"
-abbr -a zj "zellij"
+abbr -a zj zellij
