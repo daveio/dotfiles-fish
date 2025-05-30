@@ -145,8 +145,8 @@ abbr -a ts "tlm suggest"
 abbr -a u upctl
 abbr -a v vue
 abbr -a venv "python -m venv"
-abbr -a vi hx
-abbr -a vim hx
+abbr -a vi nvim
+abbr -a vim nvim
 abbr -a vue "pnpm run vue"
 abbr -a w wrangler
 abbr -a y "yt-dlp --cookies-from-browser firefox --remux-video mp4"
