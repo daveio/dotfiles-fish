@@ -69,6 +69,7 @@ abbr -a cmap "chezmoi apply"
 abbr -a cme "chezmoi edit"
 abbr -a cmef "chezmoi edit ~/.config/fish/config.fish"
 abbr -a cs 'codesign --force --sign "Developer ID Application: David Williams"'
+abbr -a cu "cursor"
 abbr -a curls "curl --proto-default https"
 abbr -a d docker
 abbr -a daveio "cd $HOME/src/github.com/daveio"
