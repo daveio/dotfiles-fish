@@ -68,6 +68,7 @@ abbr -a cmade "chezmoi add --encrypt"
 abbr -a cmap "chezmoi apply"
 abbr -a cme "chezmoi edit"
 abbr -a cmef "chezmoi edit ~/.config/fish/config.fish"
+abbr -a cmr "chezmoi re-add"
 abbr -a cs 'codesign --force --sign "Developer ID Application: David Williams"'
 abbr -a cu "cursor"
 abbr -a curls "curl --proto-default https"
