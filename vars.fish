@@ -1,6 +1,4 @@
 # set -gx AQUA_GLOBAL_CONFIG $HOME/.config/aqua/config.yaml
-set -gx ANTHROPIC_MODEL claude-sonnet-4-20250514
-set -gx ANTHROPIC_SMALL_FAST_MODEL claude-sonnet-4-20250514
 set -gx DISABLE_ZELLIJ true
 set -gx EDITOR "code -w"
 set -gx GITHUB_TOKEN (gh auth token)
