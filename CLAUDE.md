@@ -1,10 +1,10 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to AI agents (Claude, Copilot, etc.) when working with code in this repository.
 
 ## Repository Overview
 
-This repository contains Fish shell configuration files managed with `chezmoi`. The configuration is organized across multiple fish scripts that are sourced by the main `config.fish` file. These configuration files set up various environment variables, aliases, abbreviations, and functions for everyday use.
+This repository contains Fish shell configuration files managed with `chezmoi`. The configuration is organized across multiple fish scripts that are sourced by the main `config.fish` file. These configuration files set up environment variables, aliases, abbreviations, and functions for everyday use.
 
 ## File Structure and Organization
 
@@ -14,33 +14,35 @@ This repository contains Fish shell configuration files managed with `chezmoi`. 
 - `aliases.fish`: Command aliases
 - `funcs.fish`: Custom functions for various tasks
 - `os.fish`: OS-specific configuration (templated based on OS by chezmoi)
-- `interactive.fish`: Configuration for interactive shell sessions
+- `interactive.fish`: Configuration for interactive shell sessions (prompt, completions, plugins)
+- `final.fish`: Runs at the end of config, e.g., for PATH tweaks
 - `tools/`: Custom scripts and utilities
   - `sixkcd`: Script to display XKCD comics using Sixel graphics
-  - `yank`: Python script to update git repositories in parallel
 
-## Key Utilities
+## Plugins and Integrations
 
-- `yank`: Python script for updating multiple git repositories in parallel with a rich UI
-- `yank-all`: Fish function for pulling all git repositories in the current directory
-- `sixkcd`: Fish script for displaying XKCD comics using Sixel graphics in iTerm2
+The configuration uses `fisher` for plugin management and includes integrations with:
+
+- `starship`: Prompt customization (see `interactive.fish`)
+- `catppuccin`: Theme
+- `mise`: Runtime version manager (see `interactive.fish` and `os.fish`)
+- `zoxide`: Directory navigator
+- `atuin`: Shell history
+- `direnv`/`shadowenv`: Directory/project-specific environments
+- Completions and helpers for Docker, Kubernetes, cloud tools, and more
 
 ## Common Development Tasks
 
-### Adding New Configuration
+- Add environment variables to `vars.fish`
+- Add abbreviations to `abbrs.fish`
+- Add aliases to `aliases.fish`
+- Add functions to `funcs.fish`
+- Add OS-specific config to `os.fish`
+- Add interactive shell config (prompt, completions, plugins) to `interactive.fish`
+- Add any final PATH or tweaks to `final.fish`
+- Add secrets to `secrets.fish` (not committed)
 
-1. For regular configuration, add it to the appropriate file:
-
-   - Environment variables → `vars.fish`
-   - Command abbreviations → `abbrs.fish`
-   - Command aliases → `aliases.fish`
-   - Functions → `funcs.fish`
-   - OS-specific configuration → `os.fish`
-   - Interactive shell configuration → `interactive.fish`
-
-2. For sensitive information, add it to `secrets.fish`. This is managed by `chezmoi` to keep it encrypted and not committed to the repository.
-
-### Working with chezmoi
+## Working with chezmoi
 
 This repository is managed by `chezmoi`. Any changes should be added to chezmoi with:
 
@@ -50,22 +52,11 @@ chezmoi add --encrypt <file>  # Add a file to chezmoi and encrypt it
 chezmoi apply         # Apply chezmoi changes
 ```
 
-## Plugins and Integrations
+## Notes for AI Agents
 
-The configuration uses `fisher` for plugin management and includes integrations with:
-
-- `tide`: Prompt customization
-- `rose-pine`: Theme
-- `starship`: Command prompt
-- `mise`: Runtime version manager
-- `zoxide`: Directory navigator
-- `atuin`: Shell history
-- `direnv`: Directory-specific environment variables
-- `shadowenv`: Project-specific environments
-- Various tools like Docker, Kubernetes, and cloud services
-
-## Common Commands
-
-- `fish_config`: Run the built-in Fish configuration UI
-- `fisher update`: Update all Fisher plugins
-- `brew bundle dump`: Create a Brewfile with current Homebrew packages
+- The prompt is managed by `starship`, not `tide`.
+- Version management is handled by `mise`, not `asdf`.
+- There is no `yank` or `yank-all` utility in this repo.
+- `final.fish` is sourced last for any final tweaks.
+- `sixkcd` is a MOTD XKCD script for terminals with Sixel support.
+- Always check the actual file contents for up-to-date configuration and plugin usage.

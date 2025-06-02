@@ -9,16 +9,12 @@ end
 
 function fzf --wraps="fzf" -d "Set up fzf"
     set -Ux FZF_DEFAULT_OPTS "\
-    --color=bg+:#414559,bg:#303446,spinner:#F2D5CF,hl:#E78284 \
-    --color=fg:#C6D0F5,header:#E78284,info:#CA9EE6,pointer:#F2D5CF \
-    --color=marker:#BABBF1,fg+:#C6D0F5,prompt:#CA9EE6,hl+:#E78284 \
-    --color=selected-bg:#51576D \
-    --color=border:#414559,label:#C6D0F5"
+    --color=bg+:#313244,bg:#1E1E2E,spinner:#F5E0DC,hl:#F38BA8 \
+    --color=fg:#CDD6F4,header:#F38BA8,info:#CBA6F7,pointer:#F5E0DC \
+    --color=marker:#B4BEFE,fg+:#CDD6F4,prompt:#CBA6F7,hl+:#F38BA8 \
+    --color=selected-bg:#45475A \
+    --color=border:#313244,label:#CDD6F4"
     command fzf
-end
-
-function globals -d "Set up global packages which mise has trouble with"
-    gem install rubygems-server
 end
 
 function cma -d "Add a file to chezmoi"
@@ -74,22 +70,6 @@ function wipe-workflows -d "Wipe all workflow runs for a GitHub repository"
     end
 end
 
-function queue-prs -d "Queue pull requests for all git repositories in the current directory with Trunk.io"
-    for i in *
-        cd $i
-        gh pr list | awk '{print $1}' | while read line
-            trunk merge $line
-        end
-        cd ..
-    end
-end
-
-function queue-local-prs -d "Queue pull requests for the current repository with Trunk.io"
-    gh pr list | awk '{print $1}' | while read line
-        trunk merge $line
-    end
-end
-
 function delete-issue -d "Delete a GitHub issue from the current repository"
     set -l issue_number $argv[1]
     set -l issue_title $argv[2]
@@ -125,7 +105,7 @@ function delete-issues -d "Delete all GitHub issues for the current repository"
     end
 end
 
-function yank-all -d "Fetch and pull all git repositories in the current directory"
+function yank -d "Fetch and pull all git repositories in the current directory"
     for dir in *
         if test -d "$dir/.git"
             printf "%30s" "$dir  📡  "
@@ -140,7 +120,7 @@ function yank-all -d "Fetch and pull all git repositories in the current directo
     end
 end
 
-function clear-js-caches -d "Clear all JavaScript caches"
+function js-clear-caches -d "Clear all JavaScript caches"
     rm -rf ~/.bun
     rm -rf ~/.npm
     rm -rf ~/Library/pnpm
@@ -160,46 +140,7 @@ function czkawka -d "Run czkawka or krokiet"
     eval $cmd $argv
 end
 
-function list-tools -d "List mise tools not modified in the last day"
-    pushd ~/.local/share/mise/installs
-    argparse c/core "e/eco=" -- $argv or return
-    set -l dirs (find . -maxdepth 1 -type d -mtime +0 -not -name ".*" | cut -c3-)
-    for dir in $dirs
-        set -l length (string length $dir)
-        if set -q _flag_core
-            if not string match -q "*-*" $dir
-                echo "$length $dir"
-            end
-        else if set -q _flag_eco
-            set -l eco (string match -r "^[^-]+" $dir)
-            if test "$eco" = "$_flag_eco"
-                echo "$length $dir"
-            end
-        else
-            echo "$length $dir"
-        end
-    end | sort -n | cut -d" " -f2-
-    popd
-end
-
 function latest-commit -d "Get the latest commit hash on main for a GitHub repository"
     set -l repo $argv[1]
     gh api "repos/$repo/commits/main" --jq .sha
-end
-
-function dependamerge -d "Merge all open Dependabot PRs"
-    echo "Pulling latest changes from main branch..."
-    git pull origin main
-    echo "Fetching list of open PRs..."
-    set pr_numbers (gh pr list --state open --author "dependabot[bot]" --json number --jq ".[].number")
-    echo "Found "(count $pr_numbers)" open PRs. Beginning merge process..."
-    for pr in $pr_numbers
-        echo "Merging PR #$pr..."
-        gh pr merge $pr --admin --merge
-    end
-    echo "Pruning deleted remote branches..."
-    git fetch --all --tags --prune --recurse-submodules=yes
-    echo "Checking remaining open PRs..."
-    gh pr list --state open
-    echo "Merge operation complete!"
 end
