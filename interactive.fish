@@ -5,6 +5,7 @@ set fish_greeting
 aqua completion fish | source
 
 # mise
+set -gpx PATH ~/.config/mise
 mise activate fish | source
 
 # starship
