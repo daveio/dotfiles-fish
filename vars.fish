@@ -1,7 +1,7 @@
 # set -gx AQUA_GLOBAL_CONFIG $HOME/.config/aqua/config.yaml
 set -gx CLOUDFLARE_EMAIL dave@dave.io
 set -gx DISABLE_ZELLIJ true
-set -gx EDITOR "code -w"
+set -gx EDITOR "zed -w"
 set -gx GITHUB_TOKEN (gh auth token)
 set -gx HOMEBREW_BUNDLE_DUMP_NO_VSCODE 1
 set -gx MONO_GAC_PREFIX /opt/homebrew
