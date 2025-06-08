@@ -16,3 +16,12 @@ source $HOME/.config/fish/final.fish
 set -gx PATH $PATH /Users/dave/.lmstudio/bin
 # End of LM Studio CLI section
 
+
+test -e {$HOME}/.iterm2_shell_integration.fish ; and source {$HOME}/.iterm2_shell_integration.fish
+
+
+# Added by Windsurf
+fish_add_path /Users/dave/.codeium/windsurf/bin
+
+# Added by Windsurf
+fish_add_path /Users/dave/.codeium/windsurf/bin

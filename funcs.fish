@@ -144,3 +144,15 @@ function latest-commit -d "Get the latest commit hash on main for a GitHub repos
     set -l repo $argv[1]
     gh api "repos/$repo/commits/main" --jq .sha
 end
+
+function psclean -d "Clean up processes which love to hang"
+    pkill -9 git
+    pkill -9 trunk
+    pkill -9 ssh
+    pkill -9 uvx
+    pkill -9 1Password
+    pkill -9 -f "claude mcp serve"
+    pkill -9 -f "mcp-server"
+    pkill -9 -f "docker ai mcpserver"
+    open /Applications/1Password.app
+end
