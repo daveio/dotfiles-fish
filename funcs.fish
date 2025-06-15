@@ -156,3 +156,297 @@ function psclean -d "Clean up processes which love to hang"
     pkill -9 -f "docker ai mcpserver"
     open /Applications/1Password.app
 end
+
+# QuickCommit Function - Your most used workflow (806 + 786 + 129 = 1,721 uses)
+# Handles: git add -A .; oco --fgm --yes; push
+function quickcommit --description "Smart git commit with oco and optional push"
+    argparse 'p/push' 'm/message=' -- $argv
+    or return 1
+
+    # Always start with git add
+    git add -A .
+    if test $status -ne 0
+        echo "L Failed to stage files"
+        return 1
+    end
+
+    # Handle commit message
+    if set -q _flag_message
+        git commit -m "$_flag_message"
+    else
+        # Use oco for AI-generated commit message
+        if command -q oco
+            oco --fgm --yes
+        else
+            echo "   oco not found, using standard commit"
+            git commit
+        end
+    end
+
+    if test $status -ne 0
+        echo "L Commit failed"
+        return 1
+    end
+
+    echo " Commit successful"
+
+    # Optional push
+    if set -q _flag_push
+        git push
+        if test $status -eq 0
+            echo " Push successful"
+        else
+            echo "L Push failed"
+            return 1
+        end
+    end
+end
+
+# TrunkFix Function - Combines fmt and check (164 sequences found)
+function trunkfix --description "Run trunk fmt -a followed by trunk check -a"
+    argparse 'f/fix' -- $argv
+    or return 1
+
+    echo "=' Running trunk fmt -a..."
+    trunk fmt -a
+    if test $status -ne 0
+        echo "L trunk fmt failed"
+        return 1
+    end
+
+    echo " Formatting complete"
+    echo "=
+ Running trunk check -a..."
+
+    if set -q _flag_fix
+        trunk check -a --fix
+    else
+        trunk check -a
+    end
+
+    if test $status -eq 0
+        echo " All checks passed"
+    else
+        echo "   Some checks failed - review output above"
+        return 1
+    end
+end
+
+# DevSetup Function - Intelligent project setup
+function devsetup --description "Smart development environment setup"
+    echo "= Setting up development environment..."
+
+    # Check for package managers and setup accordingly
+    if test -f bun.lockb -o -f bunfig.toml
+        echo "=æ Detected Bun project"
+        bun install
+        and echo " Dependencies installed"
+        and bun dev
+    else if test -f pnpm-lock.yaml
+        echo "=æ Detected pnpm project"
+        pnpm install
+        and echo " Dependencies installed"
+        and pnpm dev
+    else if test -f package-lock.json
+        echo "=æ Detected npm project"
+        npm install
+        and echo " Dependencies installed"
+        and npm run dev
+    else if test -f Gemfile
+        echo "= Detected Ruby project"
+        bundle install
+        and echo " Dependencies installed"
+    else if test -f requirements.txt
+        echo "=
+ Detected Python project"
+        pip install -r requirements.txt
+        and echo " Dependencies installed"
+    else if test -f Cargo.toml
+        echo "> Detected Rust project"
+        cargo build
+        and echo " Dependencies installed"
+    else
+        echo "S Project type not detected, manual setup required"
+        return 1
+    end
+end
+
+# GitClean Function - Advanced git cleanup
+function gitclean --description "Comprehensive git repository cleanup"
+    echo ">ù Starting git repository cleanup..."
+
+    git fetch --prune
+    and echo " Fetched and pruned remote references"
+
+    git gc --aggressive
+    and echo " Garbage collection complete"
+
+    git remote prune origin
+    and echo " Pruned remote branches"
+
+    # Show status
+    echo "=Ê Repository status:"
+    git status --short
+end
+
+# DockerClean Function - Docker system cleanup
+function dockerclean --description "Clean up Docker containers, images, and volumes"
+    argparse 'a/all' 'f/force' -- $argv
+
+    echo "=3 Starting Docker cleanup..."
+
+    # Stop all running containers
+    set -l running_containers (docker ps -q)
+    if test (count $running_containers) -gt 0
+        echo "=Ñ Stopping running containers..."
+        docker stop $running_containers
+    end
+
+    # Remove all stopped containers
+    docker container prune -f
+    and echo " Removed stopped containers"
+
+    # Remove unused networks
+    docker network prune -f
+    and echo " Removed unused networks"
+
+    # Remove unused volumes
+    docker volume prune -f
+    and echo " Removed unused volumes"
+
+    if set -q _flag_all
+        # Remove all unused images (not just dangling)
+        docker image prune -a -f
+        and echo " Removed all unused images"
+    else
+        # Remove only dangling images
+        docker image prune -f
+        and echo " Removed dangling images"
+    end
+
+    echo "=Ê Docker disk usage after cleanup:"
+    docker system df
+end
+
+# ===============================================
+# DEVELOPMENT WORKFLOW FUNCTIONS
+# ===============================================
+
+# Common workflow: clear then run command
+function cc --description "Clear screen and run command"
+    clear
+    if test (count $argv) -gt 0
+        eval $argv
+    end
+end
+
+# Multi-up directories (based on 72 uses of "cd .. && cd ..")
+function up --description "Go up multiple directories"
+    if test (count $argv) -eq 0
+        cd ..
+    else
+        set -l levels $argv[1]
+        for i in (seq $levels)
+            cd ..
+        end
+    end
+    pwd
+end
+
+# Open in editor based on your patterns
+function edit --description "Smart editor selection"
+    if test (count $argv) -eq 0
+        # Open current directory
+        if command -q code
+            code .
+        else if command -q zed
+            zed .
+        else
+            nvim .
+        end
+    else
+        # Open specific files
+        if command -q code
+            code $argv
+        else if command -q zed
+            zed $argv
+        else
+            nvim $argv
+        end
+    end
+end
+
+# ===============================================
+# UTILITY FUNCTIONS
+# ===============================================
+
+# Extract archives (common need)
+function extract --description "Extract various archive formats"
+    if test (count $argv) -ne 1
+        echo "Usage: extract <archive>"
+        return 1
+    end
+
+    set -l file $argv[1]
+
+    if not test -f $file
+        echo "File not found: $file"
+        return 1
+    end
+
+    switch $file
+        case "*.tar.bz2"
+            tar xjf $file
+        case "*.tar.gz"
+            tar xzf $file
+        case "*.bz2"
+            bunzip2 $file
+        case "*.rar"
+            unrar x $file
+        case "*.gz"
+            gunzip $file
+        case "*.tar"
+            tar xf $file
+        case "*.tbz2"
+            tar xjf $file
+        case "*.tgz"
+            tar xzf $file
+        case "*.zip"
+            unzip $file
+        case "*.Z"
+            uncompress $file
+        case "*.7z"
+            7z x $file
+        case "*"
+            echo "Unknown archive format: $file"
+            return 1
+    end
+end
+
+# Find and replace in files (common development task)
+function findreplace --description "Find and replace text in files"
+    argparse 'e/ext=' -- $argv
+    or return 1
+
+    if test (count $argv) -lt 2
+        echo "Usage: findreplace <search> <replace> [directory]"
+        echo "Options: -e/--ext <extension> to limit to specific file types"
+        return 1
+    end
+
+    set -l search_term $argv[1]
+    set -l replace_term $argv[2]
+    set -l directory $argv[3]
+
+    if test -z "$directory"
+        set directory "."
+    end
+
+    if set -q _flag_ext
+        find $directory -name "*.$_flag_ext" -type f -exec sed -i '' "s/$search_term/$replace_term/g" {} +
+    else
+        find $directory -type f -exec sed -i '' "s/$search_term/$replace_term/g" {} +
+    end
+
+    echo " Find and replace complete"
+end
