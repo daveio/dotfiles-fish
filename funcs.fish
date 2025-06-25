@@ -448,5 +448,22 @@ function findreplace --description "Find and replace text in files"
         find $directory -type f -exec sed -i '' "s/$search_term/$replace_term/g" {} +
     end
 
-    echo " Find and replace complete"
+    echo "🧑🏻‍🎤 Find and replace complete"
+end
+
+function latest --description "Get the latest commit on main (or master) for a GitHub repository"
+    if test (count $argv) -eq 0
+        echo "Usage: latest <username/reponame>"
+        return 1
+    end
+    set -l repo $argv[1]
+    set -l sha (gh api "repos/$repo/commits/main" --jq .sha 2>/dev/null)
+    if test -z "$sha"
+        set sha (gh api "repos/$repo/commits/master" --jq .sha 2>/dev/null)
+    end
+    if test -z "$sha"
+        echo "Error: Unable to fetch latest commit for $repo"
+        return 1
+    end
+    echo $sha
 end
