@@ -6,7 +6,6 @@ set -gx CLOUDFLARE_EMAIL dave@dave.io
 set -gx CLOUDFLARE_R2_HOSTNAME $CLOUDFLARE_ACCOUNT_ID.r2.cloudflarestorage.com
 set -gx DISABLE_ZELLIJ true
 set -gx EDITOR "zed -w"
-set -gx GEMINI_API_KEY $GOOGLE_AI_API_KEY
 set -gx GITHUB_TOKEN (gh auth token)
 set -gx HOMEBREW_BUNDLE_DUMP_NO_VSCODE 1
 set -gx MONO_GAC_PREFIX /opt/homebrew
