@@ -63,11 +63,12 @@ end
 function wipe-workflows -d "Wipe all workflow runs for a GitHub repository"
     set -lx REPONAME $argv[1]
     echo "Wiping all workflow runs for $REPONAME..."
-    # gh api --paginate "/repos/$REPONAME/actions/runs" | jq '.workflow_runs.[].id' | parallel -j 16 "echo {}; gh api --silent -X DELETE /repos/$REPONAME/actions/runs/{}"
-    for i in (gh api --paginate "/repos/$REPONAME/actions/runs" | jq '.workflow_runs.[].id')
-        echo $i
-        gh api --silent -X DELETE /repos/$REPONAME/actions/runs/$i
-    end
+    gh api --paginate "/repos/$REPONAME/actions/runs" | jq '.workflow_runs.[].id' | parallel -j 16 \
+        "echo {}; gh api --silent -X DELETE /repos/$REPONAME/actions/runs/{}"
+    # for i in (gh api --paginate "/repos/$REPONAME/actions/runs" | jq '.workflow_runs.[].id')
+    #     echo $i
+    #     gh api --silent -X DELETE /repos/$REPONAME/actions/runs/$i
+    # end
 end
 
 function delete-issue -d "Delete a GitHub issue from the current repository"
