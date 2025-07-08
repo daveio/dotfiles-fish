@@ -152,6 +152,8 @@ function psclean -d "Clean up processes which love to hang"
     pkill -9 ssh
     pkill -9 uvx
     pkill -9 1Password
+    pkill -9 node
+    pkill -9 semgrep
     pkill -9 -f "claude mcp serve"
     pkill -9 -f "mcp-server"
     pkill -9 -f "docker ai mcpserver"
