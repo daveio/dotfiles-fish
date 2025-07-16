@@ -36,9 +36,9 @@ function collect_stats
 
     # Get object count information
     set -l object_info (git count-objects -v 2>/dev/null)
-    set -l object_count (echo "$object_info" | grep '^count ' | cut -d' ' -f2)
-    set -l pack_count (echo "$object_info" | grep '^in-pack ' | cut -d' ' -f2)
-    set -l pack_size (echo "$object_info" | grep '^size-pack ' | cut -d' ' -f2)
+    set -l object_count (echo "$object_info" | sed -n 's/.*count: \([0-9]*\).*/\1/p')
+    set -l pack_count (echo "$object_info" | sed -n 's/.*in-pack: \([0-9]*\).*/\1/p')
+    set -l pack_size (echo "$object_info" | sed -n 's/.*size-pack: \([0-9]*\).*/\1/p')
 
     set stats_output $stats_output "objects:$object_count"
     set stats_output $stats_output "packed:$pack_count"
