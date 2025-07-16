@@ -26,6 +26,52 @@ function print_header
     echo ""
 end
 
+# Function to collect repository statistics
+function collect_stats
+    set -l stats_output
+
+    # Get .git directory size
+    set -l git_size (du -sh .git 2>/dev/null | cut -f1)
+    set stats_output $stats_output "size:$git_size"
+
+    # Get object count information
+    set -l object_info (git count-objects -v 2>/dev/null)
+    set -l object_count (echo "$object_info" | grep '^count ' | cut -d' ' -f2)
+    set -l pack_count (echo "$object_info" | grep '^in-pack ' | cut -d' ' -f2)
+    set -l pack_size (echo "$object_info" | grep '^size-pack ' | cut -d' ' -f2)
+
+    set stats_output $stats_output "objects:$object_count"
+    set stats_output $stats_output "packed:$pack_count"
+    set stats_output $stats_output "pack-size:$pack_size"
+
+    echo (string join "|" $stats_output)
+end
+
+# Function to parse and display stats
+function display_stats
+    set -l stats_str $argv[1]
+    set -l label $argv[2]
+
+    set -l stats (string split "|" $stats_str)
+
+    for stat in $stats
+        set -l parts (string split ":" $stat)
+        set -l key $parts[1]
+        set -l value $parts[2]
+
+        switch $key
+            case "size"
+                echo "  📁 .git directory size: $value"
+            case "objects"
+                echo "  📦 Loose objects: $value"
+            case "packed"
+                echo "  📦 Packed objects: $value"
+            case "pack-size"
+                echo "  📦 Pack size: $value KB"
+        end
+    end
+end
+
 # Check if we're in a git repository
 if not git rev-parse --git-dir >/dev/null 2>&1
     print_status $RED "❌ Error: Not in a git repository!"
@@ -35,6 +81,9 @@ end
 # Store the current directory
 set -l repo_path (pwd)
 print_status $GREEN "📁 Working in repository: $repo_path"
+
+# Collect initial statistics
+set -l initial_stats (collect_stats)
 
 # Initial sync
 print_status $GREEN "🔄 Fetching and pulling latest changes from all remotes..."
@@ -166,15 +215,43 @@ print_header "Final Cleanup and Report"
 git gc --auto
 print_status $GREEN "✅ Final garbage collection completed"
 
-# Show repository size
-print_status $BLUE "📊 Repository size information:"
-set -l repo_size (du -sh .git | cut -f1)
-echo "  Total .git directory size: $repo_size"
+# Collect final statistics and show comparison
+set -l final_stats (collect_stats)
 
-# Count objects
-set -l object_count (git count-objects -v)
+print_header "Repository Statistics Comparison"
+
+print_status $BLUE "📊 Before cleanup:"
+display_stats $initial_stats "Initial"
+
 echo ""
-echo "📈 Object statistics:"
+print_status $BLUE "📊 After cleanup:"
+display_stats $final_stats "Final"
+
+echo ""
+print_status $BLUE "📈 Before vs After Summary:"
+
+# Parse stats for comparison
+set -l initial_parts (string split "|" $initial_stats)
+set -l final_parts (string split "|" $final_stats)
+
+# Extract values for comparison
+set -l initial_size (echo $initial_parts[1] | cut -d: -f2)
+set -l final_size (echo $final_parts[1] | cut -d: -f2)
+
+set -l initial_objects (echo $initial_parts[2] | cut -d: -f2)
+set -l final_objects (echo $final_parts[2] | cut -d: -f2)
+
+set -l initial_packed (echo $initial_parts[3] | cut -d: -f2)
+set -l final_packed (echo $final_parts[3] | cut -d: -f2)
+
+echo "  📁 .git size: $initial_size → $final_size"
+echo "  📦 Loose objects: $initial_objects → $final_objects"
+echo "  📦 Packed objects: $initial_packed → $final_packed"
+
+# Show detailed object count
+echo ""
+set -l object_count (git count-objects -v)
+echo "📈 Detailed object statistics:"
 echo "$object_count" | while read line
     echo "  $line"
 end
