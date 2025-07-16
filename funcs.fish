@@ -71,6 +71,13 @@ function wipe-workflows -d "Wipe all workflow runs for a GitHub repository"
     # end
 end
 
+function wipe-caches -d "Wipe all GitHub Actions caches for a GitHub repository"
+    set -lx REPONAME $argv[1]
+    echo "Wiping all GitHub Actions caches for $REPONAME..."
+    gh api --paginate "/repos/$REPONAME/actions/caches" | jq '.actions_caches[].id' | parallel -j 16 \
+        "echo {}; gh api --silent -X DELETE /repos/$REPONAME/actions/caches/{}"
+end
+
 function delete-issue -d "Delete a GitHub issue from the current repository"
     set -l issue_number $argv[1]
     set -l issue_title $argv[2]
