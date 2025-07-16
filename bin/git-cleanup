@@ -1,0 +1,195 @@
+#!/usr/bin/env fish
+
+# Git Repository Cleanup Script
+# This script performs comprehensive cleanup operations on a Git repository
+
+# Colors for output
+set -l GREEN '\033[0;32m'
+set -l YELLOW '\033[1;33m'
+set -l RED '\033[0;31m'
+set -l BLUE '\033[0;34m'
+set -l NC '\033[0m' # No Color
+
+# Function to print colored output
+function print_status
+    set -l color $argv[1]
+    set -l message $argv[2]
+    echo -e "$color==> $message$NC"
+end
+
+# Function to print section headers
+function print_header
+    echo ""
+    echo -e "$BLUE========================================$NC"
+    echo -e "$BLUE $argv[1]$NC"
+    echo -e "$BLUE========================================$NC"
+    echo ""
+end
+
+# Check if we're in a git repository
+if not git rev-parse --git-dir >/dev/null 2>&1
+    print_status $RED "❌ Error: Not in a git repository!"
+    exit 1
+end
+
+# Store the current directory
+set -l repo_path (pwd)
+print_status $GREEN "📁 Working in repository: $repo_path"
+
+# Initial sync
+print_status $GREEN "🔄 Fetching and pulling latest changes from all remotes..."
+git fetch --all --prune --tags --prune-tags --recurse-submodules=yes
+git pull --all --prune --rebase
+print_status $GREEN "✅ Latest changes fetched and pulled"
+
+# 1. Run aggressive local garbage collection
+print_header "Running Aggressive Garbage Collection"
+print_status $YELLOW "🧹 Cleaning up loose objects and optimizing repository..."
+
+# Run gc with aggressive settings
+git gc --aggressive --prune=now
+print_status $GREEN "✅ Aggressive garbage collection completed"
+
+# Also run git prune explicitly
+git prune --expire=now --progress
+print_status $GREEN "🗑️ Pruned all unreachable objects"
+
+# 2. Remove all remote-tracking references to deleted branches
+print_header "Cleaning Remote-Tracking References"
+print_status $YELLOW "🌐 Fetching and pruning deleted remote branches..."
+
+# Fetch with prune to remove deleted remote branches
+for remote in (git remote)
+    print_status $BLUE "🔍 Processing remote: $remote"
+    git fetch $remote --prune
+    print_status $GREEN "✅ Pruned deleted branches from $remote"
+end
+
+# Also clean up any stale remote-tracking branches
+git remote prune origin 2>/dev/null
+print_status $GREEN "🧹 Cleaned up stale remote-tracking references"
+
+# 3. Clean up unnecessary reflog entries
+print_header "Cleaning Reflog Entries"
+print_status $YELLOW "🗃️ Expiring old reflog entries..."
+
+# Expire reflog entries older than now (aggressive)
+git reflog expire --expire=now --all
+print_status $GREEN "✅ Expired all reflog entries"
+
+# Also run reflog gc
+git reflog expire --expire-unreachable=now --all
+print_status $GREEN "✅ Expired unreachable reflog entries"
+
+# 4. Repack the repository efficiently
+print_header "Repacking Repository"
+print_status $YELLOW "📦 Repacking objects for optimal performance..."
+
+# Repack with aggressive settings
+git repack -a -d -f --depth=250 --window=250
+print_status $GREEN "✅ Repository repacked with optimal settings"
+
+# Also run pack-refs to pack loose references
+git pack-refs --all
+print_status $GREEN "✅ Packed all loose references"
+
+# 5. Force push all branches to sync with remote
+print_header "Syncing All Branches with Remote"
+print_status $YELLOW "🚀 Force pushing all local branches to remote..."
+
+# Get all local branches
+set -l branches (git branch --format='%(refname:short)')
+set -l current_branch (git branch --show-current)
+
+for branch in $branches
+    print_status $BLUE "⚡ Processing branch: $branch"
+
+    # Check if branch has upstream
+    if git rev-parse --abbrev-ref $branch@{upstream} >/dev/null 2>&1
+        print_status $YELLOW "⬆️ Force pushing $branch..."
+        git push --force-with-lease origin $branch
+        print_status $GREEN "✅ Force pushed $branch"
+    else
+        print_status $YELLOW "⚠️ Branch $branch has no upstream, skipping..."
+    end
+end
+
+# Return to original branch
+git checkout $current_branch >/dev/null 2>&1
+
+# 6. List orphaned or unnecessary tags
+print_header "Analyzing Tags"
+print_status $YELLOW "🔍 Looking for orphaned or unreachable tags..."
+
+# Find all tags
+set -l all_tags (git tag -l)
+set -l orphaned_tags
+
+# Check each tag
+for tag in $all_tags
+    # Check if the tag points to a reachable commit
+    if not git merge-base HEAD $tag >/dev/null 2>&1
+        set orphaned_tags $orphaned_tags $tag
+    end
+end
+
+if test (count $orphaned_tags) -gt 0
+    print_status $YELLOW "🏷️ Found potentially orphaned tags:"
+    for tag in $orphaned_tags
+        echo "  - $tag"
+    end
+    echo ""
+    print_status $YELLOW "💡 To delete these tags locally: git tag -d <tag_name>"
+    print_status $YELLOW "💡 To delete from remote: git push origin --delete <tag_name>"
+else
+    print_status $GREEN "✅ No orphaned tags found"
+end
+
+# Also list tags not on any branch
+print_status $BLUE "🏷️ Tags not on any branch:"
+set -l unmerged_tags
+for tag in $all_tags
+    if test (git branch --contains tags/$tag | wc -l) -eq 0
+        set unmerged_tags $unmerged_tags $tag
+        echo "  - $tag"
+    end
+end
+
+if test (count $unmerged_tags) -eq 0
+    print_status $GREEN "✅ All tags are on branches"
+end
+
+# Final cleanup and size report
+print_header "Final Cleanup and Report"
+
+# Run final gc
+git gc --auto
+print_status $GREEN "✅ Final garbage collection completed"
+
+# Show repository size
+print_status $BLUE "📊 Repository size information:"
+set -l repo_size (du -sh .git | cut -f1)
+echo "  Total .git directory size: $repo_size"
+
+# Count objects
+set -l object_count (git count-objects -v)
+echo ""
+echo "📈 Object statistics:"
+echo "$object_count" | while read line
+    echo "  $line"
+end
+
+# Summary
+print_header "Cleanup Complete!"
+print_status $GREEN "🎉 Repository has been thoroughly cleaned and optimized."
+print_status $GREEN "🚀 All branches have been force-pushed to sync with remote."
+
+# Warnings
+echo ""
+print_status $YELLOW "⚠️  Important Notes:"
+echo "  - Force push was used - make sure other collaborators pull the latest changes"
+echo "  - Reflog has been cleared - previous states may not be recoverable"
+echo "  - Review the orphaned tags list above and delete if necessary"
+
+# Exit successfully
+exit 0
