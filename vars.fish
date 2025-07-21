@@ -13,6 +13,7 @@ set -gx HOMEBREW_BUNDLE_DUMP_NO_VSCODE 1
 set -gx MONO_GAC_PREFIX /opt/homebrew
 set -gx OLLAMA_HOST "http://localhost:11434"
 set -gx OP_PLUGIN_ALIASES_SOURCED 1
+set -gx RUSTC_WRAPPER=/Users/dave/.local/share/mise/shims/sccache
 set -gx SERVERLESS_FRAMEWORK_FORCE_UPDATE true
 set -gx SHOW_ITERM2_WARNING false
 set -gx SLACK_TEAM_ID T03RUU56D
