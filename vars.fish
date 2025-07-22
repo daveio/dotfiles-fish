@@ -10,6 +10,7 @@ set -gx EDITOR "code -w"
 set -gx GITHUB_TOKEN (gh auth token)
 set -gx GOOGLE_CLOUD_PROJECT sl1p-production
 set -gx HOMEBREW_BUNDLE_DUMP_NO_VSCODE 1
+set -gx MCP_TIMEOUT 31556952 # 1 year, should be enough for MA Sequential Thinking. Affects Claude Code.
 set -gx MONO_GAC_PREFIX /opt/homebrew
 set -gx OLLAMA_HOST "http://localhost:11434"
 set -gx OP_PLUGIN_ALIASES_SOURCED 1
