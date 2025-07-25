@@ -144,6 +144,7 @@ abbr -a 'ls' 'eza --icons=always --hyperlink --git --git-repos --group-directori
 abbr -a 'm' 'mise'
 abbr -a 'ma' 'open -a Marked'
 abbr -a 'marked' 'open -a Marked'
+abbr -a 'mcsv' 'open -a Modern\ CSV'
 abbr -a 'md' 'mise dev'
 abbr -a 'me' 'open -a MarkEdit'
 abbr -a 'mi' 'mise i'
