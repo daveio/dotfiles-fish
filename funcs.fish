@@ -477,3 +477,21 @@ function latest --description "Get the latest commit on main (or master) for a G
     end
     echo $sha
 end
+
+function ai
+    if test (count $argv) -eq 0
+        # No arguments provided, use gum to get prompt
+        set -l prompt (gum write --header "Enter your AI prompt" --placeholder "Type your prompt here..." --width 80 --height 10)
+
+        # Check if user cancelled (empty prompt)
+        if test -z "$prompt"
+            return 1
+        end
+
+        # Call claude-code with the prompt
+        bun x @anthropic-ai/claude-code -p "$prompt" | glow
+    else
+        # Arguments provided, use them as the prompt
+        bun x @anthropic-ai/claude-code -p "$argv" | glow
+    end
+end
