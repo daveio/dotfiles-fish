@@ -176,7 +176,7 @@ function quickcommit --description "Smart git commit with oco and optional push"
     # Always start with git add
     git add -A .
     if test $status -ne 0
-        echo "L Failed to stage files"
+        echo "❌ Failed to stage files"
         return 1
     end
 
@@ -188,25 +188,25 @@ function quickcommit --description "Smart git commit with oco and optional push"
         if command -q oco
             oco --fgm --yes
         else
-            echo "   oco not found, using standard commit"
+            echo "⚠️ oco not found, using standard commit"
             git commit
         end
     end
 
     if test $status -ne 0
-        echo "L Commit failed"
+        echo "❌ Commit failed"
         return 1
     end
 
-    echo " Commit successful"
+    echo "✅ Commit successful"
 
     # Optional push
     if set -q _flag_push
         git push
         if test $status -eq 0
-            echo " Push successful"
+            echo "✅ Push successful"
         else
-            echo "L Push failed"
+            echo "❌ Push failed"
             return 1
         end
     end
@@ -217,16 +217,15 @@ function trunkfix --description "Run trunk fmt -a followed by trunk check -a"
     argparse 'f/fix' -- $argv
     or return 1
 
-    echo "=' Running trunk fmt -a..."
+    echo "🔧 Running trunk fmt -a..."
     trunk fmt -a
     if test $status -ne 0
-        echo "L trunk fmt failed"
+        echo "❌ trunk fmt failed"
         return 1
     end
 
-    echo " Formatting complete"
-    echo "=
- Running trunk check -a..."
+    echo "✅ Formatting complete"
+    echo "🔍 Running trunk check -a..."
 
     if set -q _flag_fix
         trunk check -a --fix
@@ -235,67 +234,66 @@ function trunkfix --description "Run trunk fmt -a followed by trunk check -a"
     end
 
     if test $status -eq 0
-        echo " All checks passed"
+        echo "✅ All checks passed"
     else
-        echo "   Some checks failed - review output above"
+        echo "⚠️ Some checks failed - review output above"
         return 1
     end
 end
 
 # DevSetup Function - Intelligent project setup
 function devsetup --description "Smart development environment setup"
-    echo "= Setting up development environment..."
+    echo "🚀 Setting up development environment..."
 
     # Check for package managers and setup accordingly
     if test -f bun.lockb -o -f bunfig.toml
-        echo "=æ Detected Bun project"
+        echo "📦 Detected Bun project"
         bun install
-        and echo " Dependencies installed"
+        and echo "✅ Dependencies installed"
         and bun dev
     else if test -f pnpm-lock.yaml
-        echo "=æ Detected pnpm project"
+        echo "📦 Detected pnpm project"
         pnpm install
-        and echo " Dependencies installed"
+        and echo "✅ Dependencies installed"
         and pnpm dev
     else if test -f package-lock.json
-        echo "=æ Detected npm project"
+        echo "📦 Detected npm project"
         npm install
-        and echo " Dependencies installed"
+        and echo "✅ Dependencies installed"
         and npm run dev
     else if test -f Gemfile
-        echo "= Detected Ruby project"
+        echo "💎 Detected Ruby project"
         bundle install
-        and echo " Dependencies installed"
+        and echo "✅ Dependencies installed"
     else if test -f requirements.txt
-        echo "=
- Detected Python project"
+        echo "🐍 Detected Python project"
         pip install -r requirements.txt
-        and echo " Dependencies installed"
+        and echo "✅ Dependencies installed"
     else if test -f Cargo.toml
-        echo "> Detected Rust project"
+        echo "🦀 Detected Rust project"
         cargo build
-        and echo " Dependencies installed"
+        and echo "✅ Dependencies installed"
     else
-        echo "S Project type not detected, manual setup required"
+        echo "❓ Project type not detected, manual setup required"
         return 1
     end
 end
 
 # GitClean Function - Advanced git cleanup
 function gitclean --description "Comprehensive git repository cleanup"
-    echo ">ù Starting git repository cleanup..."
+    echo "🧹 Starting git repository cleanup..."
 
     git fetch --prune
-    and echo " Fetched and pruned remote references"
+    and echo "✅ Fetched and pruned remote references"
 
     git gc --aggressive
-    and echo " Garbage collection complete"
+    and echo "✅ Garbage collection complete"
 
     git remote prune origin
-    and echo " Pruned remote branches"
+    and echo "✅ Pruned remote branches"
 
     # Show status
-    echo "=Ê Repository status:"
+    echo "📊 Repository status:"
     git status --short
 end
 
@@ -303,38 +301,38 @@ end
 function dockerclean --description "Clean up Docker containers, images, and volumes"
     argparse 'a/all' 'f/force' -- $argv
 
-    echo "=3 Starting Docker cleanup..."
+    echo "🐳 Starting Docker cleanup..."
 
     # Stop all running containers
     set -l running_containers (docker ps -q)
     if test (count $running_containers) -gt 0
-        echo "=Ñ Stopping running containers..."
+        echo "⏹️ Stopping running containers..."
         docker stop $running_containers
     end
 
     # Remove all stopped containers
     docker container prune -f
-    and echo " Removed stopped containers"
+    and echo "✅ Removed stopped containers"
 
     # Remove unused networks
     docker network prune -f
-    and echo " Removed unused networks"
+    and echo "✅ Removed unused networks"
 
     # Remove unused volumes
     docker volume prune -f
-    and echo " Removed unused volumes"
+    and echo "✅ Removed unused volumes"
 
     if set -q _flag_all
         # Remove all unused images (not just dangling)
         docker image prune -a -f
-        and echo " Removed all unused images"
+        and echo "✅ Removed all unused images"
     else
         # Remove only dangling images
         docker image prune -f
-        and echo " Removed dangling images"
+        and echo "✅ Removed dangling images"
     end
 
-    echo "=Ê Docker disk usage after cleanup:"
+    echo "📊 Docker disk usage after cleanup:"
     docker system df
 end
 
@@ -488,10 +486,14 @@ function ai --description "AI assistant for generating shell commands"
 
     if test (count $argv) -eq 0
         # No arguments provided, check if gum is available
-        if not command -q gum
-            echo "❌ Error: 'gum' is not available for interactive prompts"
-            echo "💡 You can invoke this function by specifying the prompt directly:"
-            echo "   ai [PROMPT]"
+        if command -q gum
+            echo "❌  Error: gum is not available for interactive prompts."
+            echo
+            echo "    Install gum from https://github.com/charmbracelet/gum or"
+            echo "    invoke this function by specifying the prompt directly:"
+            echo
+            echo "    ai [PROMPT]"
+            echo
             return 1
         end
 
@@ -520,8 +522,8 @@ function ai --description "AI assistant for generating shell commands"
     else if command -q claude
         set ai_output (claude --append-system-prompt "$system_prompt" -p "$prompt")
     else
-        echo "❌ Error: No suitable package manager or claude command found"
-        echo "💡 Please install bun, deno, pnpm, yarn, npm, or install claude code directly"
+        echo "❌  Error: No suitable package manager or claude command found."
+        echo "    Please install bun, deno, pnpm, yarn, npm, or claude code directly"
         return 1
     end
 
