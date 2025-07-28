@@ -481,30 +481,30 @@ end
 function ai --description "AI assistant for generating shell commands"
     argparse 'x/execute' -- $argv
     or return 1
-    
-    set -l system_prompt "Do not perform this task. Output ONLY a shell one-liner which will do it."
+
+    set -l system_prompt "You must output ONLY a single shell command that accomplishes the requested task. Check the --help for the command, and the man page with 'man foo | cat'. NOTABLE PITFALL: BSD vs. GNU versions of tools, which have the same name but different parameters. Adapt your command if necessary. Do not perform the task yourself. Do not output any explanation, markdown formatting, or multiple lines. Output exactly one executable shell command and nothing else."
     set -l ai_output
-    
+
     if test (count $argv) -eq 0
         # No arguments provided, use gum to get prompt
         set -l prompt (gum write --header "Enter your AI prompt" --placeholder "Type your prompt here..." --width 80 --height 10)
-        
+
         # Check if user cancelled (empty prompt)
         if test -z "$prompt"
             return 1
         end
-        
+
         # Call claude-code with the prompt
         set ai_output (bun x @anthropic-ai/claude-code --append-system-prompt "$system_prompt" -p "$prompt")
     else
         # Arguments provided, use them as the prompt
         set ai_output (bun x @anthropic-ai/claude-code --append-system-prompt "$system_prompt" -p "$argv")
     end
-    
+
     # Strip ANSI codes, markdown formatting, and extract command
     # Remove code blocks, trim whitespace, and get the actual command
     set -l command (echo "$ai_output" | sed -E 's/```[a-z]*//g; s/```//g' | string trim)
-    
+
     if set -q _flag_execute
         # With -x flag: execute immediately without confirmation
         echo "⚡ Executing: $command"
@@ -514,7 +514,7 @@ function ai --description "AI assistant for generating shell commands"
         echo "🤖 Generated command:"
         echo "$command"
         echo ""
-        
+
         read -l -P "Execute this command? [y/N] " confirm
         if test "$confirm" = y -o "$confirm" = Y
             echo "⚡ Executing..."
