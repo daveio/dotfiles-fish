@@ -477,8 +477,20 @@ function latest --description "Get the latest commit on main (or master) for a G
 end
 
 function ai --description "AI assistant for generating shell commands"
-    argparse 'x/execute' -- $argv
+    argparse 'x/execute' 'f/force' -- $argv
     or return 1
+
+    # Configurable guardrails: patterns to match against potentially dangerous commands
+    set -l dangerous_patterns \
+        "*rm *" \
+        "*chmod -R 777 /*" \
+        "*> /dev/sd*" \
+        "*dd if=*of=/dev/*" \
+        "*mkfs*" \
+        "*fdisk*" \
+        "*:(){ :|:& };:*" \
+        "*curl*|*sh*" \
+        "*wget*|*sh*"
 
     set -l system_prompt "You must output ONLY a single shell command that accomplishes the requested task. Check the --help for the command, and the man page with 'man foo | cat'. NOTABLE PITFALL: BSD vs. GNU versions of tools, which have the same name but different parameters. Adapt your command if necessary. Do not perform the task yourself. Do not output any explanation, markdown formatting, or multiple lines. Output exactly one executable shell command and nothing else."
     set -l ai_output
@@ -486,7 +498,7 @@ function ai --description "AI assistant for generating shell commands"
 
     if test (count $argv) -eq 0
         # No arguments provided, check if gum is available
-        if command -q gum
+        if not command -q gum
             echo "❌  Error: gum is not available for interactive prompts."
             echo
             echo "    Install gum from https://github.com/charmbracelet/gum or"
@@ -501,6 +513,7 @@ function ai --description "AI assistant for generating shell commands"
 
         # Check if user cancelled (empty prompt)
         if test -z "$prompt"
+            echo "❌ Cancelled by user"
             return 1
         end
     else
@@ -508,38 +521,95 @@ function ai --description "AI assistant for generating shell commands"
         set prompt "$argv"
     end
 
+    # Escape quotes and special characters in the prompt to prevent command injection
+    set prompt (string escape -- $prompt)
+
+    echo "🤖 Generating command..."
+
     # Try different package managers to run claude code
     if command -q bun
-        set ai_output (bun x @anthropic-ai/claude-code --append-system-prompt "$system_prompt" -p "$prompt")
+        set ai_output (bun x @anthropic-ai/claude-code --append-system-prompt "$system_prompt" -p "$prompt" 2>/dev/null)
     else if command -q deno
-        set ai_output (deno run -A npm:@anthropic-ai/claude-code --append-system-prompt "$system_prompt" -p "$prompt")
+        set ai_output (deno run -A npm:@anthropic-ai/claude-code --append-system-prompt "$system_prompt" -p "$prompt" 2>/dev/null)
     else if command -q pnpm
-        set ai_output (pnpm dlx @anthropic-ai/claude-code --append-system-prompt "$system_prompt" -p "$prompt")
+        set ai_output (pnpm dlx @anthropic-ai/claude-code --append-system-prompt "$system_prompt" -p "$prompt" 2>/dev/null)
     else if command -q yarn
-        set ai_output (yarn dlx @anthropic-ai/claude-code --append-system-prompt "$system_prompt" -p "$prompt")
+        set ai_output (yarn dlx @anthropic-ai/claude-code --append-system-prompt "$system_prompt" -p "$prompt" 2>/dev/null)
     else if command -q npx
-        set ai_output (npx -y @anthropic-ai/claude-code --append-system-prompt "$system_prompt" -p "$prompt")
+        set ai_output (npx -y @anthropic-ai/claude-code --append-system-prompt "$system_prompt" -p "$prompt" 2>/dev/null)
     else if command -q claude
-        set ai_output (claude --append-system-prompt "$system_prompt" -p "$prompt")
+        set ai_output (claude --append-system-prompt "$system_prompt" -p "$prompt" 2>/dev/null)
     else
         echo "❌  Error: No suitable package manager or claude command found."
         echo "    Please install bun, deno, pnpm, yarn, npm, or claude code directly"
         return 1
     end
 
+    # Check if AI command failed or returned empty output
+    if test $status -ne 0
+        echo "❌  Error: Failed to communicate with AI service"
+        return 1
+    end
+
+    if test -z "$ai_output"
+        echo "❌  Error: AI service returned no output"
+        return 1
+    end
+
     # Remove code blocks, trim whitespace, and get the actual command
-    set -l command (echo "$ai_output" | sed -E 's/```[a-z]*//g; s/```//g' | string trim)
+    # Handle various markdown formats and clean up output
+    set -l command (echo "$ai_output" | sed -E 's/```[a-zA-Z0-9]*//g; s/```//g' | string trim | head -n 1)
+
+    # Validate that we got a non-empty command
+    if test -z "$command"
+        echo "❌  Error: AI returned empty command after processing"
+        echo "Raw output: $ai_output"
+        return 1
+    end
+
+    # Check for potentially dangerous commands using configurable patterns
+    set -l is_dangerous false
+    for pattern in $dangerous_patterns
+        if string match -q "$pattern" "$command"
+            set is_dangerous true
+            break
+        end
+    end
 
     if set -q _flag_execute
-        # With -x flag: execute immediately without confirmation
-        echo "⚡ Executing: $command"
-        eval $command
+        # Execute mode (-x flag specified)
+        if test "$is_dangerous" = true
+            if set -q _flag_force
+                # Both -x and -f specified: skip guardrails and execute
+                echo "⚠️  FORCE MODE: Executing potentially dangerous command without guardrails"
+                echo "⚡ Executing: $command"
+                eval $command
+            else
+                # Only -x specified: refuse to execute dangerous command
+                echo "❌  SAFETY: Potentially destructive command detected, refusing to auto-execute"
+                echo "🤖 Generated command:"
+                echo "$command"
+                echo ""
+                echo "💡 Use --force (-f) with --execute (-x) to bypass safety checks, or run without --execute for confirmation prompt"
+                return 1
+            end
+        else
+            # Not dangerous: execute immediately
+            echo "⚡ Executing: $command"
+            eval $command
+        end
     else
-        # Without -x flag: show command and ask for confirmation
+        # Interactive mode (no -x flag): show command and ask for confirmation
         echo "🤖 Generated command:"
         echo "$command"
-        echo ""
 
+        # Show warning if dangerous (ignoring -f flag in interactive mode)
+        if test "$is_dangerous" = true
+            echo ""
+            echo "⚠️  WARNING: This command appears potentially destructive!"
+        end
+
+        echo ""
         read -l -P "Execute this command? [y/N] " confirm
         if test "$confirm" = y -o "$confirm" = Y
             echo "⚡ Executing..."
