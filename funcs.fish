@@ -484,24 +484,47 @@ function ai --description "AI assistant for generating shell commands"
 
     set -l system_prompt "You must output ONLY a single shell command that accomplishes the requested task. Check the --help for the command, and the man page with 'man foo | cat'. NOTABLE PITFALL: BSD vs. GNU versions of tools, which have the same name but different parameters. Adapt your command if necessary. Do not perform the task yourself. Do not output any explanation, markdown formatting, or multiple lines. Output exactly one executable shell command and nothing else."
     set -l ai_output
+    set -l prompt
 
     if test (count $argv) -eq 0
-        # No arguments provided, use gum to get prompt
-        set -l prompt (gum write --header "Enter your AI prompt" --placeholder "Type your prompt here..." --width 80 --height 10)
+        # No arguments provided, check if gum is available
+        if not command -q gum
+            echo "❌ Error: 'gum' is not available for interactive prompts"
+            echo "💡 You can invoke this function by specifying the prompt directly:"
+            echo "   ai [PROMPT]"
+            return 1
+        end
+
+        set prompt (gum write --header "Enter your prompt" --placeholder "Type your prompt here..." --width 80 --height 10)
 
         # Check if user cancelled (empty prompt)
         if test -z "$prompt"
             return 1
         end
-
-        # Call claude-code with the prompt
-        set ai_output (bun x @anthropic-ai/claude-code --append-system-prompt "$system_prompt" -p "$prompt")
     else
         # Arguments provided, use them as the prompt
-        set ai_output (bun x @anthropic-ai/claude-code --append-system-prompt "$system_prompt" -p "$argv")
+        set prompt "$argv"
     end
 
-    # Strip ANSI codes, markdown formatting, and extract command
+    # Try different package managers to run claude code
+    if command -q bun
+        set ai_output (bun x @anthropic-ai/claude-code --append-system-prompt "$system_prompt" -p "$prompt")
+    else if command -q deno
+        set ai_output (deno run -A npm:@anthropic-ai/claude-code --append-system-prompt "$system_prompt" -p "$prompt")
+    else if command -q pnpm
+        set ai_output (pnpm dlx @anthropic-ai/claude-code --append-system-prompt "$system_prompt" -p "$prompt")
+    else if command -q yarn
+        set ai_output (yarn dlx @anthropic-ai/claude-code --append-system-prompt "$system_prompt" -p "$prompt")
+    else if command -q npx
+        set ai_output (npx -y @anthropic-ai/claude-code --append-system-prompt "$system_prompt" -p "$prompt")
+    else if command -q claude
+        set ai_output (claude --append-system-prompt "$system_prompt" -p "$prompt")
+    else
+        echo "❌ Error: No suitable package manager or claude command found"
+        echo "💡 Please install bun, deno, pnpm, yarn, npm, or install claude code directly"
+        return 1
+    end
+
     # Remove code blocks, trim whitespace, and get the actual command
     set -l command (echo "$ai_output" | sed -E 's/```[a-z]*//g; s/```//g' | string trim)
 
