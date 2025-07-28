@@ -478,11 +478,16 @@ function latest --description "Get the latest commit on main (or master) for a G
     echo $sha
 end
 
-function ai
+function ai --description "AI assistant for generating shell commands"
+    argparse 'x/execute' -- $argv
+    or return 1
+    
+    set -l system_prompt "Do not perform this task. Output ONLY a shell one-liner which will do it."
+    set -l ai_output
+    
     if test (count $argv) -eq 0
         # No arguments provided, use gum to get prompt
         set -l prompt (gum write --header "Enter your AI prompt" --placeholder "Type your prompt here..." --width 80 --height 10)
-        set -l system_prompt "Do not perform this task. Output ONLY a shell one-liner which will do it."
         
         # Check if user cancelled (empty prompt)
         if test -z "$prompt"
@@ -490,9 +495,32 @@ function ai
         end
         
         # Call claude-code with the prompt
-        bun x @anthropic-ai/claude-code --append-system-prompt "$system_prompt" -p "$prompt" | glow
+        set ai_output (bun x @anthropic-ai/claude-code --append-system-prompt "$system_prompt" -p "$prompt")
     else
         # Arguments provided, use them as the prompt
-        bun x @anthropic-ai/claude-code --append-system-prompt "$system_prompt" -p "$argv" | glow
+        set ai_output (bun x @anthropic-ai/claude-code --append-system-prompt "$system_prompt" -p "$argv")
+    end
+    
+    # Strip ANSI codes, markdown formatting, and extract command
+    # Remove code blocks, trim whitespace, and get the actual command
+    set -l command (echo "$ai_output" | sed -E 's/```[a-z]*//g; s/```//g' | string trim)
+    
+    if set -q _flag_execute
+        # With -x flag: execute immediately without confirmation
+        echo "⚡ Executing: $command"
+        eval $command
+    else
+        # Without -x flag: show command and ask for confirmation
+        echo "🤖 Generated command:"
+        echo "$command"
+        echo ""
+        
+        read -l -P "Execute this command? [y/N] " confirm
+        if test "$confirm" = y -o "$confirm" = Y
+            echo "⚡ Executing..."
+            eval $command
+        else
+            echo "❌ Execution cancelled"
+        end
     end
 end
