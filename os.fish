@@ -1,4 +1,4 @@
-# -*- mode: go-template; tab_size: 4; hard_tabs: false -*-
+# -*- mode: go-template; tab_size: 4; hard_tabs: false; -*-
 
 
     # macOS

@@ -13,6 +13,12 @@ starship init fish | source -
 # zoxide
 zoxide init fish | source
 
+# orb stack
+source ~/.orbstack/shell/init2.fish 2>/dev/null
+
+# kiro
+string match -q "$TERM_PROGRAM" "kiro" and . (kiro --locate-shell-integration-path fish)
+
 # atuin via ctrl+r and not up arrow
 set -gx ATUIN_NOBIND true
 atuin init fish | source
