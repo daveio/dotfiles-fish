@@ -16,7 +16,7 @@ set -gx MONO_GAC_PREFIX /opt/homebrew
 set -gx OLLAMA_HOST "http://localhost:11434"
 set -gx OP_PLUGIN_ALIASES_SOURCED 1
 set -gx PIPEDREAM_WORKSPACE_ID o_zwIXEmW
-set -gx RUSTC_WRAPPER "/Users/dave/.local/share/mise/shims/sccache"
+# set -gx RUSTC_WRAPPER "/Users/dave/.local/share/mise/shims/sccache"
 set -gx SEMGREP_API_KEY $SEMGREP_APP_TOKEN
 set -gx SERVERLESS_FRAMEWORK_FORCE_UPDATE true
 set -gx SHOW_ITERM2_WARNING false
