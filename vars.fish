@@ -1,5 +1,6 @@
 # set -gx AQUA_GLOBAL_CONFIG $HOME/.config/aqua/config.yaml
 # set -gx PYTHON_BUILD_FREE_THREADING 1
+set -gx AQUA_API_KEY $AVALON_API_KEY
 set -gx CF_API_EMAIL $CLOUDFLARE_EMAIL
 set -gx CF_API_KEY $CLOUDFLARE_API_KEY
 set -gx CLOUDFLARE_EMAIL dave@dave.io
