@@ -34,9 +34,9 @@
     if test -d (brew --prefix)"/share/fish/vendor_completions.d"
         set -p fish_complete_path (brew --prefix)/share/fish/vendor_completions.d
     end
-    set HB_CNF_HANDLER (brew --repository)"/Library/Taps/homebrew/homebrew-command-not-found/handler.fish"
-    if test -f $HB_CNF_HANDLER
-        source $HB_CNF_HANDLER
+    set HOMEBREW_COMMAND_NOT_FOUND_HANDLER (brew --repository)/Library/Homebrew/command-not-found/handler.fish
+        if test -f $HOMEBREW_COMMAND_NOT_FOUND_HANDLER
+        source $HOMEBREW_COMMAND_NOT_FOUND_HANDLER
     end
     source $HOME/.iterm2_shell_integration.fish
 
