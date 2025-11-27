@@ -1,16 +1,13 @@
 name: devskim
-"on":
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-  schedule:
-    - cron: 37 7 * * 3
+on:
+  push: null
+  pull_request: null
 permissions:
   actions: read
   contents: read
+  id-token: write
+  issues: write
+  pull-requests: write
   security-events: write
 jobs:
   devskim:
@@ -18,10 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
+        uses: actions/checkout@c2d88d3ecc89a9ef08eebf45d9637801dcee7eb5
       - name: analysis
         uses: microsoft/DevSkim-Action@4b5047945a44163b94642a1cecc0d93a3f428cc6
       - name: upload
-        uses: github/codeql-action/upload-sarif@b1e4dc3db58c9601794e22a9f6d28d45461b9dbf
+        uses: github/codeql-action/upload-sarif@59ce4c1340a74f56c129f758767ef33668e572b0
         with:
           sarif_file: devskim-results.sarif
