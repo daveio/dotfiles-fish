@@ -18,20 +18,8 @@ pieces completion fish | source
 
 # orb stack
 source ~/.orbstack/shell/init2.fish 2>/dev/null
-
 # kiro
 string match -q "$TERM_PROGRAM" "kiro" and . (kiro --locate-shell-integration-path fish)
-
-# atuin via ctrl+r and not up arrow
-set -gx ATUIN_NOBIND true
-atuin init fish | source
-bind \cr _atuin_search
-bind -M insert \cr _atuin_search
-
-# virtualfish
-if set -q VIRTUAL_ENV
-    echo -n -s (set_color -b blue white) "(" (basename "$VIRTUAL_ENV") ")" (set_color normal) " "
-end
 
 # sixkcd as motd
 # $HOME/.config/fish/tools/sixkcd
@@ -60,13 +48,11 @@ shadowenv init fish | source
 
 # direnv
 direnv hook fish | source
-
 # fuck
 thefuck --alias | source
 
 # warp
 # printf '\eP$f{"hook": "SourcedRcFileForWarp", "value": { "shell": "fish" }}\x9c'
-
 # upcloud upctl
 upctl completion fish | source
 
