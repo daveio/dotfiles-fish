@@ -148,11 +148,6 @@ function czkawka -d "Run czkawka or krokiet"
     eval $cmd $argv
 end
 
-function latest-commit -d "Get the latest commit hash on main for a GitHub repository"
-    set -l repo $argv[1]
-    gh api "repos/$repo/commits/main" --jq .sha
-end
-
 function psclean -d "Clean up processes which love to hang"
     pkill -9 git
     pkill -9 trunk
@@ -459,23 +454,6 @@ function findreplace --description "Find and replace text in files"
     echo "🧑🏻‍🎤 Find and replace complete"
 end
 
-function latest --description "Get the latest commit on main (or master) for a GitHub repository"
-    if test (count $argv) -eq 0
-        echo "Usage: latest <username/reponame>"
-        return 1
-    end
-    set -l repo $argv[1]
-    set -l sha (gh api "repos/$repo/commits/main" --jq .sha 2>/dev/null)
-    if test -z "$sha"
-        set sha (gh api "repos/$repo/commits/master" --jq .sha 2>/dev/null)
-    end
-    if test -z "$sha"
-        echo "Error: Unable to fetch latest commit for $repo"
-        return 1
-    end
-    echo $sha
-end
-
 function ai --description "AI assistant for generating shell commands"
     argparse 'x/execute' 'f/force' -- $argv
     or return 1
@@ -639,4 +617,72 @@ function merge-all --description "Merge all open PRs"
         gh api -X PUT repos/$owner/$repo/pulls/$number/merge \
                 -f merge_method=merge
     end
+end
+
+function latest --description "Get the latest commit SHA from a GitHub repository"
+    # Parse arguments
+    if test (count $argv) -lt 1
+        echo "Usage: latest username/reponame [refspec]"
+        echo "  refspec: optional branch/tag/commit (defaults to main, falls back to master)"
+        return 1
+    end
+
+    set -l repo $argv[1]
+    set -l refspec ""
+
+    # Check if refspec was provided
+    if test (count $argv) -ge 2
+        set refspec $argv[2]
+    end
+
+    # Validate repo format
+    if not string match -q '*/*' $repo
+        echo "Error: Repository must be in format 'username/reponame'"
+        return 1
+    end
+
+    # If no refspec provided, detect main vs master
+    if test -z "$refspec"
+        # Try 'main' first
+        set -l main_check (curl -s -o /dev/null -w "%{http_code}" \
+            "https://api.github.com/repos/$repo/commits/main")
+
+        if test "$main_check" = "200"
+            set refspec "main"
+        else
+            # Fall back to 'master'
+            set -l master_check (curl -s -o /dev/null -w "%{http_code}" \
+                "https://api.github.com/repos/$repo/commits/master")
+
+            if test "$master_check" = "200"
+                set refspec "master"
+            else
+                echo "Error: Neither 'main' nor 'master' branch found for $repo"
+                return 1
+            end
+        end
+    end
+
+    # Fetch the commit SHA
+    set -l response (curl -s "https://api.github.com/repos/$repo/commits/$refspec")
+
+    # Check for errors in response
+    if string match -q '*"message"*' $response
+        set -l error_msg (echo $response | jq -r '.message // empty')
+        if test -n "$error_msg"
+            echo "Error: $error_msg"
+            return 1
+        end
+    end
+
+    # Extract the SHA
+    set -l sha (echo $response | jq -r '.sha // empty')
+
+    if test -z "$sha" -o "$sha" = "null"
+        echo "Error: Could not retrieve SHA for $repo at $refspec"
+        return 1
+    end
+
+    # Output the SHA
+    echo $sha
 end
