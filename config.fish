@@ -7,15 +7,14 @@ source $HOME/.config/fish/funcs.fish
 if status is-interactive
     source $HOME/.config/fish/os.fish
     source $HOME/.config/fish/interactive.fish
+    source $HOME/.config/fish/atuin.fish
 end
 
 source $HOME/.config/fish/final.fish
 
-
 # Added by LM Studio CLI (lms)
 set -gx PATH $PATH /Users/dave/.lmstudio/bin
 # End of LM Studio CLI section
-
 
 # Added by Antigravity
 fish_add_path /Users/dave/.antigravity/antigravity/bin
