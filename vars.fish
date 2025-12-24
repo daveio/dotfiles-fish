@@ -7,10 +7,11 @@ set -gx CLOUDFLARE_EMAIL dave@dave.io
 set -gx CLOUDFLARE_R2_HOSTNAME $CLOUDFLARE_ACCOUNT_ID.r2.cloudflarestorage.com
 set -gx DISABLE_ZELLIJ true
 set -gx DOMAINR_API_KEY $RAPIDAPI_API_KEY
-set -gx EDITOR "agy --wait"
+set -gx EDITOR "code --wait"
 set -gx GITHUB_TOKEN (gh auth token)
 set -gx GOOGLE_CLOUD_PROJECT sl1p-production
 set -gx HOMEBREW_BUNDLE_DUMP_NO_VSCODE 1
+set -gx HORDE_USERNAME daveio
 set -gx MCP_TIMEOUT 31556952 # 1 year, should be enough for MA Sequential Thinking. Affects Claude Code.
 set -gx META_MCP_API_KEY $METAMCP_API_KEY
 set -gx MONO_GAC_PREFIX /opt/homebrew
