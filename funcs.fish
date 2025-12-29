@@ -3,6 +3,54 @@ function nas-docker -d "Set up Docker to use the NAS"
     set -gx DOCKER_TLS_VERIFY 1
 end
 
+function creds -d "Print env vars with a case-insensitive prefix"
+    if test (count $argv) -lt 1
+        echo "Usage: creds <prefix>" >&2
+        return 1
+    end
+
+    set -l prefix_lc (string lower -- "$argv[1]")
+    set -l prefix_len (string length -- "$prefix_lc")
+    set -l rows
+
+    for line in (env)
+        set -l parts (string split -m1 "=" -- "$line")
+        set -l name $parts[1]
+        if test -z "$name"
+            continue
+        end
+
+        set -l name_lc (string lower -- "$name")
+        if test (string length -- "$name_lc") -lt $prefix_len
+            continue
+        end
+
+        if test (string sub -s 1 -l $prefix_len -- "$name_lc") = "$prefix_lc"
+            set -l value $parts[2]
+            set -a rows "$name" "$value"
+        end
+    end
+
+    if test (count $rows) -eq 0
+        return 0
+    end
+
+    set -l max_len 0
+    for i in (seq 1 2 (count $rows))
+        set -l name $rows[$i]
+        set -l name_len (string length -- "$name")
+        if test $name_len -gt $max_len
+            set max_len $name_len
+        end
+    end
+
+    for i in (seq 1 2 (count $rows))
+        set -l name $rows[$i]
+        set -l value $rows[(math $i + 1)]
+        printf "%*s %s\n" $max_len "$name" "$value"
+    end
+end
+
 function le-fw -d "Set up certs for the firewall"
     lego -d fw.lan.sl1p.net -d fw.mgmt.lan.sl1p.net -d fw.private.lan.sl1p.net -d fw.guest.lan.sl1p.net -d fw.iot.lan.sl1p.net -d fw.fastlane.lan.sl1p.net -d fw.public.lan.sl1p.net -d private.external.lan.sl1p.net -d fastlane.external.lan.sl1p.net -d public.external.lan.sl1p.net -a --email dave@dave.io -k ec384 --dns dnsimple --dns.resolvers ns1.dnsimple.com --pem --pfx run
 end
