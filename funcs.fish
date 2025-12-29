@@ -157,7 +157,7 @@ function psclean -d "Clean up processes which love to hang"
     pkill -9 node
     pkill -9 semgrep
     pkill -9 -f "claude mcp serve"
-    pkill -9 -f "mcp-server"
+    pkill -9 -f mcp-server
     pkill -9 -f "docker ai mcpserver"
     open /Applications/1Password.app
 end
@@ -165,7 +165,7 @@ end
 # QuickCommit Function - Your most used workflow (806 + 786 + 129 = 1,721 uses)
 # Handles: git add -A .; oco --fgm --yes; push
 function quickcommit --description "Smart git commit with oco and optional push"
-    argparse 'p/push' 'm/message=' -- $argv
+    argparse p/push 'm/message=' -- $argv
     or return 1
 
     # Always start with git add
@@ -209,7 +209,7 @@ end
 
 # TrunkFix Function - Combines fmt and check (164 sequences found)
 function trunkfix --description "Run trunk fmt -a followed by trunk check -a"
-    argparse 'f/fix' -- $argv
+    argparse f/fix -- $argv
     or return 1
 
     echo "🔧 Running trunk fmt -a..."
@@ -294,7 +294,7 @@ end
 
 # DockerClean Function - Docker system cleanup
 function dockerclean --description "Clean up Docker containers, images, and volumes"
-    argparse 'a/all' 'f/force' -- $argv
+    argparse a/all f/force -- $argv
 
     echo "🐳 Starting Docker cleanup..."
 
@@ -455,7 +455,7 @@ function findreplace --description "Find and replace text in files"
 end
 
 function ai --description "AI assistant for generating shell commands"
-    argparse 'x/execute' 'f/force' -- $argv
+    argparse x/execute f/force -- $argv
     or return 1
 
     # Configurable guardrails: patterns to match against potentially dangerous commands
@@ -615,7 +615,7 @@ function merge-all --description "Merge all open PRs"
         # Merge the PR
         echo "Merging $owner/$repo #$number"
         gh api -X PUT repos/$owner/$repo/pulls/$number/merge \
-                -f merge_method=merge
+            -f merge_method=merge
     end
 end
 
@@ -647,15 +647,15 @@ function latest --description "Get the latest commit SHA from a GitHub repositor
         set -l main_check (curl -s -o /dev/null -w "%{http_code}" \
             "https://api.github.com/repos/$repo/commits/main")
 
-        if test "$main_check" = "200"
-            set refspec "main"
+        if test "$main_check" = 200
+            set refspec main
         else
             # Fall back to 'master'
             set -l master_check (curl -s -o /dev/null -w "%{http_code}" \
                 "https://api.github.com/repos/$repo/commits/master")
 
-            if test "$master_check" = "200"
-                set refspec "master"
+            if test "$master_check" = 200
+                set refspec master
             else
                 echo "Error: Neither 'main' nor 'master' branch found for $repo"
                 return 1
@@ -678,7 +678,7 @@ function latest --description "Get the latest commit SHA from a GitHub repositor
     # Extract the SHA
     set -l sha (echo $response | jq -r '.sha // empty')
 
-    if test -z "$sha" -o "$sha" = "null"
+    if test -z "$sha" -o "$sha" = null
         echo "Error: Could not retrieve SHA for $repo at $refspec"
         return 1
     end
