@@ -9,8 +9,8 @@ function creds -d "Print env vars with a case-insensitive prefix"
         return 1
     end
 
-    set -l prefix_lc (string lower -- "$argv[1]")
-    set -l prefix_len (string length -- "$prefix_lc")
+    set -l prefix_clean (string lower -- "$argv[1]" | string replace -r -a '[^a-z0-9]' '')
+    set -l prefix_len (string length -- "$prefix_clean")
     set -l rows
 
     for line in (env)
@@ -20,12 +20,12 @@ function creds -d "Print env vars with a case-insensitive prefix"
             continue
         end
 
-        set -l name_lc (string lower -- "$name")
-        if test (string length -- "$name_lc") -lt $prefix_len
+        set -l name_clean (string lower -- "$name" | string replace -r -a '[^a-z0-9]' '')
+        if test (string length -- "$name_clean") -lt $prefix_len
             continue
         end
 
-        if test (string sub -s 1 -l $prefix_len -- "$name_lc") = "$prefix_lc"
+        if test (string sub -s 1 -l $prefix_len -- "$name_clean") = "$prefix_clean"
             set -l value $parts[2]
             set -a rows "$name" "$value"
         end
