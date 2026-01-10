@@ -1,7 +1,7 @@
 abbr -a '7z' '7zz'
 abbr -a 'a2' 'aria2c -x8 -s8'
 abbr -a 'ag' 'agy'
-abbr -a 'b' 'baselime'
+abbr -a 'b' 'bunnylol'
 abbr -a 'ba' 'bundle add'
 abbr -a 'bad' 'bundle add --group development'
 abbr -a 'bb' 'bun run build'

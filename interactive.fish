@@ -16,8 +16,14 @@ zoxide init fish | source
 # pieces
 pieces completion fish | source
 
+# bunnylol.rs
+bunnylol completion fish | source
+
 # orb stack
 source ~/.orbstack/shell/init2.fish 2>/dev/null
+
+# opencode
+fish_add_path /Users/dave/.opencode/bin
 # kiro
 string match -q "$TERM_PROGRAM" "kiro" and . (kiro --locate-shell-integration-path fish)
 
