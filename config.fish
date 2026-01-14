@@ -11,3 +11,5 @@ if status is-interactive
 end
 
 source $HOME/.config/fish/final.fish
+
+
