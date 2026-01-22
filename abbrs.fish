@@ -30,7 +30,7 @@ abbr -a brlis 'brew list'
 abbr -a brln 'brew ln'
 abbr -a brlog 'brew log'
 abbr -a brmig 'brew migrate'
-abbr -a brmig 'brew missing'
+abbr -a brmis 'brew missing'
 abbr -a broca 'brew --cache'
 abbr -a broce 'brew --cellar'
 abbr -a broen 'brew --env'
@@ -72,7 +72,7 @@ abbr -a bund 'bun dev'
 abbr -a buni 'bun install'
 abbr -a bunr 'bun run'
 abbr -a c cargo
-abbr -a cc claude
+abbr -a cl claude
 abbr -a ci 'cargo install'
 abbr -a cm chezmoi
 abbr -a cme 'chezmoi edit'

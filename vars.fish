@@ -1,5 +1,3 @@
-# set -gx AQUA_GLOBAL_CONFIG $HOME/.config/aqua/config.yaml
-# set -gx PYTHON_BUILD_FREE_THREADING 1
 set -gx AQUA_API_KEY $AVALON_API_KEY
 set -gx CF_API_EMAIL $CLOUDFLARE_EMAIL
 set -gx CF_API_KEY $CLOUDFLARE_API_KEY
@@ -8,7 +6,6 @@ set -gx CLOUDFLARE_R2_HOSTNAME $CLOUDFLARE_ACCOUNT_ID.r2.cloudflarestorage.com
 set -gx DISABLE_ZELLIJ true
 set -gx DOMAINR_API_KEY $RAPIDAPI_API_KEY
 set -gx EDITOR "code --wait"
-set -gx GITHUB_TOKEN ($HOME/.local/share/mise/shims/gh auth token)
 set -gx GOOGLE_CLOUD_PROJECT sl1p-production
 set -gx HOMEBREW_BUNDLE_DUMP_NO_VSCODE 1
 set -gx HOMEBREW_DISPLAY_INSTALL_TIMES 1
@@ -21,7 +18,6 @@ set -gx OP_PLUGIN_ALIASES_SOURCED 1
 set -gx PIPEDREAM_WORKSPACE_ID o_zwIXEmW
 set -gx QDRANT_HOSTNAME 303cc87b-ddb2-4e49-b6b5-130028595e74.europe-west3-0.gcp.cloud.qdrant.io
 set -gx QDRANT_PORT 6333
-# set -gx RUSTC_WRAPPER "/Users/dave/.local/share/mise/shims/sccache"
 set -gx SEMGREP_API_KEY $SEMGREP_APP_TOKEN
 set -gx SERVERLESS_FRAMEWORK_FORCE_UPDATE true
 set -gx SHOW_ITERM2_WARNING false
