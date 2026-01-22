@@ -15,3 +15,11 @@ function mise --wraps="mise" -d "Wrapper for mise that blocks 'mise implode'"
     end
     command mise $argv
 end
+
+# Additional PATH additions
+fish_add_path $HOME/.lmstudio/bin
+fish_add_path $HOME/.codeium/windsurf/bin
+fish_add_path $HOME/.opencode/bin
+
+# kiro shell integration
+string match -q "$TERM_PROGRAM" "kiro" and . (kiro --locate-shell-integration-path fish)

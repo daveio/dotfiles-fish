@@ -22,11 +22,6 @@ bunnylol completion fish | source
 # orb stack
 source ~/.orbstack/shell/init2.fish 2>/dev/null
 
-# opencode
-fish_add_path /Users/dave/.opencode/bin
-# kiro
-string match -q "$TERM_PROGRAM" "kiro" and . (kiro --locate-shell-integration-path fish)
-
 # sixkcd as motd
 # $HOME/.config/fish/tools/sixkcd
 
@@ -68,9 +63,3 @@ complete -c gsutil -f -a '(__fish_argcomplete_complete gsutil)'
 
 # navi
 navi widget fish | source
-
-# windsurf
-fish_add_path $HOME/.codeium/windsurf/bin
-
-# lmstudio
-fish_add_path $HOME/.lmstudio/bin
