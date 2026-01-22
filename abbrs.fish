@@ -5,7 +5,6 @@ abbr -a b bunnylol
 abbr -a ba 'bundle add'
 abbr -a bad 'bundle add --group development'
 abbr -a bb 'bun run build'
-abbr -a bd 'bun dev'
 abbr -a be 'bundle exec'
 abbr -a belt 'poetry -C /Users/dave/src/github.com/daveio/belt run belt'
 abbr -a bi 'bundle init'
