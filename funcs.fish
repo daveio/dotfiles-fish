@@ -752,20 +752,21 @@ function deps --description "Update dependencies based on project files"
     if test -f package.json
         set -l pm (jq -r '.packageManager // empty' package.json 2>/dev/null | string split '@')[1]
         switch $pm
-            case bun
-                echo "Running bun install..."
-                bun install
             case yarn
                 echo "Running yarn install..."
                 yarn install
             case pnpm
                 echo "Running pnpm install..."
                 pnpm install
+                pnpm approve-builds
+                pnpm install
             case npm
                 echo "Running npm install..."
                 npm install
             case '*'
-                echo "No packageManager specified, defaulting to bun..."
+                echo "Running bun install..."
+                bun install
+                bun pm trust --all
                 bun install
         end
     end
