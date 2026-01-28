@@ -734,3 +734,53 @@ function latest --description "Get the latest commit SHA from a GitHub repositor
     # Output the SHA
     echo $sha
 end
+
+function deps --description "Update dependencies based on project files"
+    # Ensure we're in a git repo
+    if not git rev-parse --git-dir >/dev/null 2>&1
+        echo "Error: Not a git repository"
+        return 1
+    end
+
+    # Node.js / package.json
+    if test -f package.json
+        set -l pm (jq -r '.packageManager // empty' package.json 2>/dev/null | string split '@')[1]
+        switch $pm
+            case bun
+                echo "Running bun install..."
+                bun install
+            case yarn
+                echo "Running yarn install..."
+                yarn install
+            case pnpm
+                echo "Running pnpm install..."
+                pnpm install
+            case npm
+                echo "Running npm install..."
+                npm install
+            case '*'
+                echo "No packageManager specified, defaulting to bun..."
+                bun install
+        end
+    end
+
+    # Ruby / Gemfile
+    if test -f Gemfile
+        echo "Running bundle update..."
+        bundle update
+    end
+
+    # Rust / Cargo.toml
+    if test -f Cargo.toml
+        echo "Running cargo update..."
+        cargo update
+        echo "Running cargo build..."
+        cargo build
+    end
+
+    # Python / pyproject.toml
+    if test -f pyproject.toml
+        echo "Running uv lock -U..."
+        uv lock -U
+    end
+end
