@@ -772,12 +772,14 @@ function deps --description "Update dependencies based on project files"
 
     # Ruby / Gemfile
     if test -f Gemfile
-        echo "Running bundle update..."
-        bundle update
+        echo "Running bundle update --all..."
+        bundle update --all
     end
 
     # Rust / Cargo.toml
     if test -f Cargo.toml
+        echo "Running cargo upgrade..."
+        cargo upgrade
         echo "Running cargo update..."
         cargo update
         echo "Running cargo build..."
