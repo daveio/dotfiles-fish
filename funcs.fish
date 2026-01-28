@@ -748,6 +748,12 @@ function deps --description "Update dependencies based on project files"
         mise install
     end
 
+    # trunk
+    if test -f .trunk/trunk.yaml
+        echo "Running trunk upgrade..."
+        trunk upgrade
+    end
+
     # Node.js / package.json
     if test -f package.json
         set -l pm (jq -r '.packageManager // empty' package.json 2>/dev/null | string split '@')[1]
