@@ -742,6 +742,12 @@ function deps --description "Update dependencies based on project files"
         return 1
     end
 
+    # mise
+    if test -f mise.toml
+        echo "Running mise install..."
+        mise install
+    end
+
     # Node.js / package.json
     if test -f package.json
         set -l pm (jq -r '.packageManager // empty' package.json 2>/dev/null | string split '@')[1]
