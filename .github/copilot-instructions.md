@@ -1,62 +1,63 @@
-# CLAUDE.md
+# Agent Instructions
 
-This file provides guidance to AI agents (Claude, Copilot, etc.) when working with code in this repository.
+This repository contains Fish shell configuration files managed with `chezmoi`.
 
-## Repository Overview
+## 📂 Code Structure
 
-This repository contains Fish shell configuration files managed with `chezmoi`. The configuration is organized across multiple fish scripts that are sourced by the main `config.fish` file. These configuration files set up environment variables, aliases, abbreviations, and functions for everyday use.
+- **Core Config**:
+  - `config.fish`: Entry point. Sources other files.
+  - `vars.fish`: Global environment variables.
+  - `abbrs.fish`: Abbreviations.
+  - `aliases.fish`: Aliases.
+  - `funcs.fish`: Utility functions.
+  - `os.fish`: OS-specific configurations.
+  - `interactive.fish`: Interactive session settings (prompt, etc).
+  - `final.fish`: Last-loaded settings (PATH tweaks).
 
-## File Structure and Organization
+- **Directories**:
+  - `completions/`: Fish completion scripts.
+  - `bin/`: Helper scripts (e.g., `sixkcd` for Sixel XKCD comics).
+  - `fish_plugins`: Fisher plugin list.
 
-- `config.fish`: Main entry point that sources other configuration files
-- `vars.fish`: Global environment variables
-- `abbrs.fish`: Command abbreviations for quick access to common commands
-- `aliases.fish`: Command aliases
-- `funcs.fish`: Custom functions for various tasks
-- `os.fish`: OS-specific configuration (templated based on OS by chezmoi)
-- `interactive.fish`: Configuration for interactive shell sessions (prompt, completions, plugins)
-- `final.fish`: Runs at the end of config, e.g., for PATH tweaks
-- `tools/`: Custom scripts and utilities
-  - `sixkcd`: Script to display XKCD comics using Sixel graphics
+## 🛠 Workflows & Commands
 
-## Plugins and Integrations
+### Chezmoi (Dotfile Management)
 
-The configuration uses `fisher` for plugin management and includes integrations with:
+This repo is a `chezmoi` source.
 
-- `starship`: Prompt customization (see `interactive.fish`)
-- `catppuccin`: Theme
-- `mise`: Runtime version manager (see `interactive.fish` and `os.fish`)
-- `zoxide`: Directory navigator
-- `atuin`: Shell history
-- `direnv`/`shadowenv`: Directory/project-specific environments
-- Completions and helpers for Docker, Kubernetes, cloud tools, and more
+- **Apply changes**: `chezmoi apply`
+- **Add file**: `chezmoi add <file>`
+- **Add secret**: `chezmoi add --encrypt <file>`
+- **Diff**: `chezmoi diff`
 
-## Common Development Tasks
+### Development & Maintenance
 
-- Add environment variables to `vars.fish`
-- Add abbreviations to `abbrs.fish`
-- Add aliases to `aliases.fish`
-- Add functions to `funcs.fish`
-- Add OS-specific config to `os.fish`
-- Add interactive shell config (prompt, completions, plugins) to `interactive.fish`
-- Add any final PATH or tweaks to `final.fish`
-- Add secrets to `secrets.fish` (not committed)
+- **Dependencies**: `deps` (Updates mise, trunk, node, ruby, rust, python deps)
+- **Formatting/Linting**: `trunkfix` (Runs `trunk fmt` and `trunk check`)
+- **Setup**: `devsetup` (Smart detection for project setup)
+- **Committing**: `quickcommit` (Stages, AI-generates message via `oco`, commits, optional push)
 
-## Working with chezmoi
+### Key Utility Functions (`funcs.fish`)
 
-This repository is managed by `chezmoi`. Any changes should be added to chezmoi with:
+- `ai`: Generates shell commands using Claude.
+- `yank`: Fetches/pulls all git repos in the current directory.
+- `dockerclean`: Cleans up docker resources.
+- `gitclean`: Prunes and GCs git repo.
 
-```fish
-chezmoi add <file>   # Add a file to chezmoi
-chezmoi add --encrypt <file>  # Add a file to chezmoi and encrypt it
-chezmoi apply         # Apply chezmoi changes
-```
+## 🧩 Dependencies & Tools
 
-## Notes for AI Agents
+- **Shell**: Fish (v3+)
+- **Plugin Manager**: `fisher`
+- **Version Manager**: `mise` (not asdf)
+- **Directory Navigation**: `zoxide`, `direnv`, `shadowenv`
+- **History**: `atuin`
+- **Prompt**: `starship` (configured in `interactive.fish`)
+- **Theme**: `catppuccin`
+- **Linter**: `trunk`
+- **Secret Management**: `1Password` (referenced in `psclean`), `chezmoi` encryption.
 
-- The prompt is managed by `starship`, not `tide`.
-- Version management is handled by `mise`, not `asdf`.
-- There is no `yank` or `yank-all` utility in this repo.
-- `final.fish` is sourced last for any final tweaks.
-- `sixkcd` is a MOTD XKCD script for terminals with Sixel support.
-- Always check the actual file contents for up-to-date configuration and plugin usage.
+## ⚠️ Important Notes
+
+- **Secrets**: `secrets.fish` is git-ignored. Do not commit secrets.
+- **Syntax**: Use strictly Fish syntax. No Bash/Zsh syntax (e.g., use `set -gx VAR val` not `export VAR=val`).
+- **Symlinks**: Watch out for broken symlinks.
