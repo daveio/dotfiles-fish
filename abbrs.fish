@@ -195,7 +195,7 @@ abbr -a task-dev 'ruby -Ilib ./bin/notion-task'
 abbr -a tc 'trunk check'
 abbr -a tca 'trunk check -a'
 abbr -a tcaf 'trunk check -a --fix'
-abbr -a tdl 'tidal-dl -l'
+abbr -a tdl 'tiddl download url'
 abbr -a te 'tlm explain'
 abbr -a tf terraform
 abbr -a tfa 'trunk fmt -a'
