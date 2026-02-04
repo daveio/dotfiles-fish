@@ -1,63 +1,76 @@
-# Agent Instructions
+# Agent Guide for dotfiles-fish
 
-This repository contains Fish shell configuration files managed with `chezmoi`.
+This repository contains Fish shell configuration files, managed via `chezmoi` but published as resolved templates.
 
-## 📂 Code Structure
+## ⚡️ Quick Start
+
+- **Main Config**: `config.fish` (sources everything else)
+- **Plugin Manager**: `fisher` (plugins listed in `fish_plugins`)
+- **Linting**: `trunk check` (uses Trunk)
+
+## 📂 Project Structure
 
 - **Core Config**:
-  - `config.fish`: Entry point. Sources other files.
-  - `vars.fish`: Global environment variables.
+  - `config.fish`: Entry point. Sources files in specific order.
+  - `vars.fish`: Environment variables.
   - `abbrs.fish`: Abbreviations.
   - `aliases.fish`: Aliases.
-  - `funcs.fish`: Utility functions.
-  - `os.fish`: OS-specific configurations.
-  - `interactive.fish`: Interactive session settings (prompt, etc).
-  - `final.fish`: Last-loaded settings (PATH tweaks).
+  - `funcs.fish`: Custom functions.
+  - `os.fish`: OS-specific settings (templated via chezmoi).
+  - `interactive.fish`: Interactive session setup (Starship, Mise, Atuin).
+  - `final.fish`: Final adjustments (PATH, etc.).
+- **Components**:
+  - `completions/`: Fish completion scripts (`.fish`).
+  - `fish_plugins`: List of Fisher plugins.
+  - `.trunk/`: Trunk configuration for linting.
+- **Missing Files**:
+  - `secrets.fish`: Intentionally gitignored. Contains secrets/tokens. Must be created manually.
 
-- **Directories**:
-  - `completions/`: Fish completion scripts.
-  - `bin/`: Helper scripts (e.g., `sixkcd` for Sixel XKCD comics).
-  - `fish_plugins`: Fisher plugin list.
+## 🛠️ Commands
 
-## 🛠 Workflows & Commands
+### Linting & Formatting
 
-### Chezmoi (Dotfile Management)
+This project uses **Trunk** for linting and formatting.
 
-This repo is a `chezmoi` source.
+- **Check all files**: `trunk check`
+- **Format files**: `trunk fmt`
+- **Enabled Linters**:
+  - `actionlint` (GitHub Actions)
+  - `markdownlint` (Markdown)
+  - `prettier` (Formatting)
+  - `trufflehog` (Secret scanning)
+  - `yamllint` (YAML)
+  - `shellcheck` (via extensions or trunk if configured, though mostly fish scripts here)
 
-- **Apply changes**: `chezmoi apply`
-- **Add file**: `chezmoi add <file>`
-- **Add secret**: `chezmoi add --encrypt <file>`
-- **Diff**: `chezmoi diff`
+### Package Management
 
-### Development & Maintenance
+- **Fisher**: Used for fish plugins.
+  - Update plugins: `fisher update`
+  - Install from file: `fisher update` (reads `fish_plugins`)
 
-- **Dependencies**: `deps` (Updates mise, trunk, node, ruby, rust, python deps)
-- **Formatting/Linting**: `trunkfix` (Runs `trunk fmt` and `trunk check`)
-- **Setup**: `devsetup` (Smart detection for project setup)
-- **Committing**: `quickcommit` (Stages, AI-generates message via `oco`, commits, optional push)
+## 🧬 Code Conventions
 
-### Key Utility Functions (`funcs.fish`)
+- **Syntax**: Standard Fish shell syntax.
+- **Organization**:
+  - Functions go in `funcs.fish` or `functions/` (autoloaded).
+  - Aliases go in `aliases.fish`.
+  - Abbreviations go in `abbrs.fish`.
+- **Style**:
+  - Use 4 spaces for indentation (implied by typical fish defaults, check file content to confirm).
+  - Prefer `abbr` over `alias` for interactive shell shortcuts.
 
-- `ai`: Generates shell commands using Claude.
-- `yank`: Fetches/pulls all git repos in the current directory.
-- `dockerclean`: Cleans up docker resources.
-- `gitclean`: Prunes and GCs git repo.
+## ⚠️ Gotchas
 
-## 🧩 Dependencies & Tools
+1. **`secrets.fish`**: If code references variables like `$API_KEY`, they are likely defined in `secrets.fish`, which is not in the repo. Do not remove the source command.
+2. **`os.fish`**: This file is technically a chezmoi template target. Edits here might be overwritten if re-generated from chezmoi, but in this repo, treat it as a source file.
+3. **Dependencies**: Relies on external tools being installed:
+   - `starship` (Prompt)
+   - `mise` (Tool versioning)
+   - `atuin` (Shell history)
+   - `zoxide` (Directory jumping, likely)
 
-- **Shell**: Fish (v3+)
-- **Plugin Manager**: `fisher`
-- **Version Manager**: `mise` (not asdf)
-- **Directory Navigation**: `zoxide`, `direnv`, `shadowenv`
-- **History**: `atuin`
-- **Prompt**: `starship` (configured in `interactive.fish`)
-- **Theme**: `catppuccin`
-- **Linter**: `trunk`
-- **Secret Management**: `1Password` (referenced in `psclean`), `chezmoi` encryption.
+## 🤖 CI/CD
 
-## ⚠️ Important Notes
-
-- **Secrets**: `secrets.fish` is git-ignored. Do not commit secrets.
-- **Syntax**: Use strictly Fish syntax. No Bash/Zsh syntax (e.g., use `set -gx VAR val` not `export VAR=val`).
-- **Symlinks**: Watch out for broken symlinks.
+- **GitHub Actions**: Workflows in `.github/workflows/`.
+  - `claude.yml`: Likely a review or automated check workflow.
+  - `devskim.yaml`: Security scanning.
