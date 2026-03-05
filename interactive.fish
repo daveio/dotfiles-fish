@@ -7,8 +7,8 @@ aqua completion fish | source
 # mise
 mise activate fish | source
 
-# starship
-starship init fish | source -
+# oh-my-posh
+oh-my-posh init fish --config ~/.config/oh-my-posh.yaml | source
 
 # zoxide
 zoxide init fish | source
@@ -21,6 +21,7 @@ bunnylol completion fish | source
 
 # orb stack
 source ~/.orbstack/shell/init2.fish 2>/dev/null
+orbctl completion fish | source
 
 # opencode
 fish_add_path /Users/dave/.opencode/bin
@@ -34,6 +35,12 @@ if test $DISABLE_ZELLIJ != true
     set ZELLIJ_AUTO_ATTACH true
     set ZELLIJ_AUTO_EXIT true
     eval (zellij setup --generate-auto-start fish | string collect)
+end
+
+# homebrew commmand-not-found handler
+set HOMEBREW_COMMAND_NOT_FOUND_HANDLER (brew --repository)/Library/Homebrew/command-not-found/handler.fish
+if test -f $HOMEBREW_COMMAND_NOT_FOUND_HANDLER
+    source $HOMEBREW_COMMAND_NOT_FOUND_HANDLER
 end
 
 # krew
