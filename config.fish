@@ -11,3 +11,6 @@ if status is-interactive
 end
 
 source $HOME/.config/fish/final.fish
+
+# opencode
+fish_add_path /Users/dave/.opencode/bin
