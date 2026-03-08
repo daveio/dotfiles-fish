@@ -1,8 +1,8 @@
 abbr -a 7z 7zz
 abbr -a a2 'aria2c -x8 -s8'
+abbr -a ad 'age --decrypt --identity ~/.age/'
+abbr -a ae 'age --encrypt --armor --recipients-file ~/.age/recipients'
 abbr -a ag agy
-abbr -a agee 'age --encrypt --armor --recipients-file ~/.age/recipients'
-abbr -a aged 'age --decrypt --identity ~/.age/'
 abbr -a b bunnylol
 abbr -a ba 'bundle add'
 abbr -a bad 'bundle add --group development'
