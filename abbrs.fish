@@ -161,12 +161,13 @@ abbr -a mp mprocs
 abbr -a mpr 'mise prune'
 abbr -a mtr 'mise trust'
 abbr -a mu multipass
-abbr -a mup 'mise upgrade'
+abbr -a mup 'github-auth && mise upgrade'
 abbr -a muse 'mise use'
 abbr -a n nerdctl
 abbr -a nas 'command ssh nas'
 abbr -a o orbctl
 abbr -a oco 'oco --fgm --yes'
+abbr -a omp oh-my-posh
 abbr -a p 'git add -A . && oco --fgm --yes'
 abbr -a pf 'open -a "Path Finder"'
 abbr -a pg 'pgrep -lf'
