@@ -8,7 +8,10 @@ set fish_greeting
 mise activate fish | source
 
 # oh-my-posh
-oh-my-posh init fish --config ~/.config/oh-my-posh.yaml | source
+# oh-my-posh init fish --config ~/.config/oh-my-posh.yaml | source
+
+# starship
+starship init fish | source
 
 # zoxide
 zoxide init fish | source
