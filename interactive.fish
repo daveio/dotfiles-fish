@@ -2,7 +2,7 @@
 set fish_greeting
 
 # Aqua
-aqua completion fish | source
+# aqua completion fish | source
 
 # mise
 mise activate fish | source
