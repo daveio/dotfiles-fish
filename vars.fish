@@ -18,6 +18,7 @@ set -gx OP_PLUGIN_ALIASES_SOURCED 1
 set -gx PIPEDREAM_WORKSPACE_ID o_zwIXEmW
 set -gx QDRANT_HOSTNAME 303cc87b-ddb2-4e49-b6b5-130028595e74.europe-west3-0.gcp.cloud.qdrant.io
 set -gx QDRANT_PORT 6333
+set -gx RESTIC_COMPRESSION max
 set -gx RESTIC_REPOSITORY /Volumes/cache/restic
 set -gx RESTIC_PASSWORD_COMMAND "op item get "restic" --fields password --reveal"
 set -gx SEMGREP_API_KEY $SEMGREP_APP_TOKEN
