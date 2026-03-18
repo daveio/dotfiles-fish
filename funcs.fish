@@ -650,10 +650,10 @@ function merge-all --description "Merge all open PRs"
     # Fetch open PRs where you are requested as a reviewer
     gh api search/issues \
         --method GET \
-        -f q='is:open is:pr owner:daveio archived:false' \
+        -f q='is:open is:pr owner:synmux archived:false' \
         -f per_page=100 \
         --jq '.items[] | [.number, (.repository_url | split("/") | .[-2]), (.repository_url | split("/") | .[-1])] | @tsv' \
-        | while read -l line # owner:daveio was review-requested:daveio
+        | while read -l line # owner:synmux was review-requested:synmux
         # Split the TSV line into variables
         set -l parts (string split \t $line)
         set -l number $parts[1]
